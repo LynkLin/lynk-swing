@@ -8,6 +8,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -15,7 +16,10 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
@@ -25,6 +29,9 @@ import org.jdesktop.swingx.decorator.HighlighterFactory;
 import org.jdesktop.swingx.table.TableColumnExt;
 
 import com.lynk.swing.common.Constants;
+import com.lynk.swing.component.table.FilterTableHeaderRenderer;
+import com.lynk.swing.component.table.TableColumnFilterPopup;
+import com.lynk.swing.component.table.TableFilter;
 
 /**
  * 自定义
@@ -59,9 +66,31 @@ public class LynkTable extends JXTable implements Constants {
 	private MenuDeleteAction menuDeleteAction;
 	private MenuRestoreAction menuRestoreAction;
 	
+	private TableColumnFilterPopup popup;
+	
+	/**
+	 * 不现实筛选
+	 * @param dm
+	 */
 	public LynkTable(TableModel dm) {
+		this(dm, false);
+	}
+	
+	public LynkTable(TableModel dm, boolean showFilter) {
 		super(dm);
 		init();
+		if(showFilter) {
+			dm.addTableModelListener(new TableModelListener() {
+				
+				@Override
+				public void tableChanged(TableModelEvent e) {
+					if(popup.getFilter() != null) {
+						popup.getFilter().setFilter(LynkTable.this);
+						popup.refreshUiFilterList();
+					}
+				}
+			});
+		}
 	}
 	
 	/**
@@ -240,7 +269,7 @@ public class LynkTable extends JXTable implements Constants {
 	 */
 	public void setMenuAddAction(MenuAddAction menuAddAction) {
 		this.menuAddAction = menuAddAction;
-		uiAdd = new JMenuItem(addText, new ImageIcon(this.getClass().getResource("/resource/image/add.png")));
+		uiAdd = new JMenuItem(addText, new ImageIcon(this.getClass().getResource("/resources/images/add.png")));
 		uiAdd.setFont(APP_FONT);
 		uiAdd.addActionListener(new ActionListener() {
 			
@@ -258,7 +287,7 @@ public class LynkTable extends JXTable implements Constants {
 	 */
 	public void setMenuDeleteAction(MenuDeleteAction menuDeleteAction) {
 		this.menuDeleteAction = menuDeleteAction;
-		uiDelete = new JMenuItem(deleteText, new ImageIcon(this.getClass().getResource("/resource/image/delete.png")));
+		uiDelete = new JMenuItem(deleteText, new ImageIcon(this.getClass().getResource("/resources/images/disable.png")));
 		uiDelete.setFont(APP_FONT);
 		uiDelete.addActionListener(new ActionListener() {
 			
@@ -276,7 +305,7 @@ public class LynkTable extends JXTable implements Constants {
 	 */
 	public void setMenuRestoreAction(MenuRestoreAction menuRestoreAction) {
 		this.menuRestoreAction = menuRestoreAction;
-		uiRestore = new JMenuItem(restoreText, new ImageIcon(this.getClass().getResource("/resource/image/reset_pwd.png")));
+		uiRestore = new JMenuItem(restoreText, new ImageIcon(this.getClass().getResource("/resources/images/enable.png")));
 		uiRestore.setFont(APP_FONT);
 		uiRestore.addActionListener(new ActionListener() {
 			
@@ -289,9 +318,16 @@ public class LynkTable extends JXTable implements Constants {
 	}
 
 	private void init() {
+		TableFilter filter = new TableFilter(this);
+		popup = new TableColumnFilterPopup(true, filter);
+		FilterTableHeaderRenderer renderer = new FilterTableHeaderRenderer(filter);
+		for(TableColumn column : Collections.list(getColumnModel().getColumns())) {
+			column.setHeaderRenderer(renderer);
+		}
+		
 		uiPopMenu = new JPopupMenu();
 		
-		uiSelectAll = new JMenuItem(selectAllText, new ImageIcon(this.getClass().getResource("/resource/image/select_all.png")));
+		uiSelectAll = new JMenuItem(selectAllText, new ImageIcon(this.getClass().getResource("/resources/images/select-all.png")));
 		uiSelectAll.setFont(APP_FONT);
 		uiSelectAll.addActionListener(new ActionListener() {
 			
@@ -361,7 +397,6 @@ public class LynkTable extends JXTable implements Constants {
 				}
 			}
 		});
-		
 		setTableProperties();
 	}
 	

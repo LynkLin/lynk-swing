@@ -1,10 +1,16 @@
 package com.lynk.swing.component;
 
+import java.awt.AWTKeyStroke;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.KeyEvent;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.swing.FocusManager;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 
 import com.lynk.swing.common.Constants;
 
@@ -19,6 +25,10 @@ public class LynkFrame extends JFrame implements Constants {
 		waitPanel = new InfiniteProgressPanel();
 		waitPanel.setFont(WAIT_PANEL_FONT);
 		setGlassPane(waitPanel);
+		Set<AWTKeyStroke> forwordDefaultKeys = getFocusTraversalKeys(FocusManager.FORWARD_TRAVERSAL_KEYS);
+		Set<AWTKeyStroke> forwordNewKeys = new HashSet<AWTKeyStroke>(forwordDefaultKeys);
+		forwordNewKeys.add(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0));
+		setFocusTraversalKeys(FocusManager.FORWARD_TRAVERSAL_KEYS, forwordNewKeys);
 	}
 	
 	/**
