@@ -6,8 +6,11 @@ import java.awt.Dimension;
 
 import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.RowSorter;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.RowSorterEvent;
+import javax.swing.event.RowSorterListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
@@ -80,6 +83,15 @@ public class TableRowHead extends JTable {
 				public void tableChanged(TableModelEvent evt) {
 					AbstractTableModel model = (AbstractTableModel) evt.getSource();
 					((TableRowHeaderModel) headTable.getModel()).setRowCount(model.getRowCount());
+					headTable.repaint();
+				}
+			});
+			reftable.getRowSorter().addRowSorterListener(new RowSorterListener() {
+				
+				@Override
+				public void sorterChanged(RowSorterEvent evt) {
+					RowSorter<?> sorter = evt.getSource();
+					((TableRowHeaderModel) headTable.getModel()).setRowCount(sorter.getViewRowCount());
 					headTable.repaint();
 				}
 			});
