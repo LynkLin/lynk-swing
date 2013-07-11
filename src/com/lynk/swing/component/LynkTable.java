@@ -16,6 +16,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.event.RowSorterEvent;
+import javax.swing.event.RowSorterListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -66,6 +68,8 @@ public class LynkTable extends JXTable implements Constants {
 	private MenuDeleteAction menuDeleteAction;
 	private MenuRestoreAction menuRestoreAction;
 	
+	private IModelOrSorterChanged modelOrSorterChanged;
+	
 	private TableColumnFilterPopup popup;
 	
 	public JPopupMenu getUiPopMenu() {
@@ -80,9 +84,10 @@ public class LynkTable extends JXTable implements Constants {
 		this(dm, false);
 	}
 	
-	public LynkTable(TableModel dm, boolean showFilter) {
+	public LynkTable(TableModel dm, final boolean showFilter) {
 		super(dm);
 		init();
+		
 		if(showFilter) {
 			dm.addTableModelListener(new TableModelListener() {
 				
@@ -95,6 +100,29 @@ public class LynkTable extends JXTable implements Constants {
 				}
 			});
 		}
+	}
+	
+	public void addModelOrSorterChanged(IModelOrSorterChanged evt) {
+		modelOrSorterChanged = evt;
+		getModel().addTableModelListener(new TableModelListener() {
+			
+			@Override
+			public void tableChanged(TableModelEvent e) {
+				if(modelOrSorterChanged != null) {
+					modelOrSorterChanged.modelOrSorterChanged();
+				}
+			}
+		});
+
+		getRowSorter().addRowSorterListener(new RowSorterListener() {
+			
+			@Override
+			public void sorterChanged(RowSorterEvent e) {
+				if(modelOrSorterChanged != null) {
+					modelOrSorterChanged.modelOrSorterChanged();
+				}
+			}
+		});
 	}
 	
 	/**
@@ -437,5 +465,9 @@ public class LynkTable extends JXTable implements Constants {
 	
 	public interface MenuRestoreAction {
 		void restore(int indexes[]);
+	}
+	
+	public interface IModelOrSorterChanged {
+		void modelOrSorterChanged();
 	}
 }
