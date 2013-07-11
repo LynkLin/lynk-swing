@@ -16,6 +16,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.event.RowSorterEvent;
+import javax.swing.event.RowSorterListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -65,32 +67,53 @@ public class LynkTable extends JXTable implements Constants {
 	private MenuAddAction menuAddAction;
 	private MenuDeleteAction menuDeleteAction;
 	private MenuRestoreAction menuRestoreAction;
+	private IModelOrSorterChanged modelOrSorterChanged;
 	
 	private TableColumnFilterPopup popup;
 	
+	public JPopupMenu getUiPopMenu() {
+		return uiPopMenu;
+	}
+
 	/**
-	 * 不现实筛选
+	 * 不筛选
 	 * @param dm
 	 */
 	public LynkTable(TableModel dm) {
 		this(dm, false);
 	}
 	
-	public LynkTable(TableModel dm, boolean showFilter) {
+	public LynkTable(TableModel dm, final boolean showFilter) {
 		super(dm);
 		init();
-		if(showFilter) {
-			dm.addTableModelListener(new TableModelListener() {
-				
-				@Override
-				public void tableChanged(TableModelEvent e) {
-					if(popup.getFilter() != null) {
-						popup.getFilter().setFilter(LynkTable.this);
-						popup.refreshUiFilterList();
-					}
+		
+		dm.addTableModelListener(new TableModelListener() {
+			
+			@Override
+			public void tableChanged(TableModelEvent e) {
+				if(modelOrSorterChanged != null) {
+					modelOrSorterChanged.modelOrSorterChanged();
 				}
-			});
-		}
+				if(showFilter && popup.getFilter() != null) {
+					popup.getFilter().setFilter(LynkTable.this);
+					popup.refreshUiFilterList();
+				}
+			}
+		});
+		
+		getRowSorter().addRowSorterListener(new RowSorterListener() {
+			
+			@Override
+			public void sorterChanged(RowSorterEvent e) {
+				if(modelOrSorterChanged != null) {
+					modelOrSorterChanged.modelOrSorterChanged();
+				}
+			}
+		});
+	}
+	
+	public void addModelOrSorterChanged(IModelOrSorterChanged evt) {
+		modelOrSorterChanged = evt;
 	}
 	
 	/**
@@ -433,5 +456,9 @@ public class LynkTable extends JXTable implements Constants {
 	
 	public interface MenuRestoreAction {
 		void restore(int indexes[]);
+	}
+	
+	public interface IModelOrSorterChanged {
+		void modelOrSorterChanged();
 	}
 }
