@@ -2,6 +2,7 @@ package com.lynk.swing.component.table;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -48,6 +49,7 @@ public class TableFilter extends HashMap<Integer, List<FilterItem>>{
 					items.add(item);
 				}
 			}
+			Collections.sort(items);
 			put(columnIndex, items);
 		}
 		isSettingFilter = false;
@@ -73,6 +75,7 @@ public class TableFilter extends HashMap<Integer, List<FilterItem>>{
 				items.add(new FilterItem(model.getValueAt(mRowIndex, columnIndex)));
 				
 			}
+			Collections.sort(items);
 			put(columnIndex, items);
 		}
 		isSettingFilter = false;

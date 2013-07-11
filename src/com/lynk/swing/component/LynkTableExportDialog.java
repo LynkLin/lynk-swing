@@ -1,4 +1,4 @@
-package com.lynk.swing.component.table;
+package com.lynk.swing.component;
 
 import javax.swing.JDialog;
 
@@ -43,8 +43,6 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 
 import com.jidesoft.swing.CheckBoxList;
 import com.lynk.swing.common.Constants;
-import com.lynk.swing.component.LynkDialog;
-import com.lynk.swing.component.LynkTable;
 
 public class LynkTableExportDialog extends LynkDialog implements Constants {
 	private static final long serialVersionUID = 1L;
@@ -53,15 +51,23 @@ public class LynkTableExportDialog extends LynkDialog implements Constants {
 	private JTextField uiFilePath;
 	private CheckBoxList uiColumnName;
 	
+	private boolean autoWidth;
 	private LynkTable table;
 
 	public static void showDialog(Component parent, LynkTable table) {
-		LynkTableExportDialog dialog = new LynkTableExportDialog(table);
+		LynkTableExportDialog dialog = new LynkTableExportDialog(table, false);
+		dialog.setLocationRelativeTo(parent);
+		dialog.setVisible(true);
+	}
+	
+	public static void showDialog(Component parent, LynkTable table, boolean autoWidth) {
+		LynkTableExportDialog dialog = new LynkTableExportDialog(table, autoWidth);
 		dialog.setLocationRelativeTo(parent);
 		dialog.setVisible(true);
 	}
 
-	private LynkTableExportDialog(LynkTable table) {
+	private LynkTableExportDialog(LynkTable table, boolean autoWidth) {
+		this.autoWidth = autoWidth;
 		this.table = table;
 		initComponents();
 	}
@@ -264,6 +270,13 @@ public class LynkTableExportDialog extends LynkDialog implements Constants {
 					publish("处理中, " + (rowIndex + 1) + "/" + sorter.getViewRowCount());
 				}
 				
+				if(autoWidth) {
+					publish("设置列宽......");
+					for(short i = 0; i < exportedColumnIndexes.length; i++) {
+						sheet.autoSizeColumn(i);
+					}
+				}
+				publish("保存文件......");
 				File saveFile = new File(uiFilePath.getText());
 				OutputStream os = new FileOutputStream(saveFile);
 				wb.write(os);

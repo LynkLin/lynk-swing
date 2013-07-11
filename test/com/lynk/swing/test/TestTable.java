@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import com.lynk.swing.component.LynkTable;
-import com.lynk.swing.component.table.LynkTableExportDialog;
+import com.lynk.swing.component.LynkTableExportDialog;
 
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
