@@ -68,6 +68,10 @@ public class LynkTable extends JXTable implements Constants {
 	
 	private TableColumnFilterPopup popup;
 	
+	public JPopupMenu getUiPopMenu() {
+		return uiPopMenu;
+	}
+
 	/**
 	 * 不现实筛选
 	 * @param dm
