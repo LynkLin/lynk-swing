@@ -73,7 +73,7 @@ public class LynkTable extends JXTable implements Constants {
 	}
 
 	/**
-	 * 不现实筛选
+	 * 不筛选
 	 * @param dm
 	 */
 	public LynkTable(TableModel dm) {
