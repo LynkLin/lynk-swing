@@ -67,6 +67,7 @@ public class LynkTable extends JXTable implements Constants {
 	private MenuAddAction menuAddAction;
 	private MenuDeleteAction menuDeleteAction;
 	private MenuRestoreAction menuRestoreAction;
+	
 	private IModelOrSorterChanged modelOrSorterChanged;
 	
 	private TableColumnFilterPopup popup;
