@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 
+import javax.swing.DefaultRowSorter;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.RowSorter;
@@ -91,7 +92,13 @@ public class TableRowHead extends JTable {
 				@Override
 				public void sorterChanged(RowSorterEvent evt) {
 					RowSorter<?> sorter = evt.getSource();
-					((TableRowHeaderModel) headTable.getModel()).setRowCount(sorter.getViewRowCount());
+					int count = dataTable.getModel().getRowCount();
+					if(sorter instanceof DefaultRowSorter<?, ?>) {
+						if(((DefaultRowSorter<?, ?>) sorter).getRowFilter() != null) {
+							count = sorter.getViewRowCount();
+						}
+					}
+					((TableRowHeaderModel) headTable.getModel()).setRowCount(count);
 					headTable.repaint();
 				}
 			});

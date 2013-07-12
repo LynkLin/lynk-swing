@@ -94,6 +94,10 @@ public class LynkTable extends JXTable implements Constants {
 				@Override
 				public void tableChanged(TableModelEvent e) {
 					if(popup.getFilter() != null) {
+//						RowSorter<?> sorter = LynkTable.this.getRowSorter();
+//						if(sorter instanceof DefaultRowSorter<?, ?>) {
+//							((DefaultRowSorter<?, ?>) sorter).setRowFilter(null);
+//						}
 						popup.getFilter().setFilter(LynkTable.this);
 						popup.refreshUiFilterList();
 					}
