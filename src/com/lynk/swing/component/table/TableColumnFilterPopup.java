@@ -29,7 +29,7 @@ import javax.swing.table.TableColumnModel;
 import com.jidesoft.swing.CheckBoxList;
 import com.lynk.swing.common.Constants;
 import com.lynk.swing.component.LynkPanel;
-import com.lynk.swing.component.table.popup.LynkSearchTextField;
+import com.lynk.swing.component.LynkSearchTextField;
 import com.lynk.swing.component.table.popup.ResizablePopupMenu;
 
 public class TableColumnFilterPopup extends ResizablePopupMenu implements Constants, MouseListener {

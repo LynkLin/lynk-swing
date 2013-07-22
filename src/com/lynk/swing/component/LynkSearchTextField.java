@@ -1,10 +1,9 @@
-package com.lynk.swing.component.table.popup;
+package com.lynk.swing.component;
 
 import java.awt.Graphics;
 import java.awt.Image;
 
 import javax.swing.ImageIcon;
-import com.lynk.swing.component.LynkTextField;
 
 public class LynkSearchTextField extends LynkTextField {
 
