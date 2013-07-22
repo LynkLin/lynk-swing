@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
@@ -32,6 +33,7 @@ import org.jdesktop.swingx.table.TableColumnExt;
 
 import com.lynk.swing.common.Constants;
 import com.lynk.swing.component.table.FilterTableHeaderRenderer;
+import com.lynk.swing.component.table.LynkColumnControlButton;
 import com.lynk.swing.component.table.TableColumnFilterPopup;
 import com.lynk.swing.component.table.TableFilter;
 
@@ -87,7 +89,6 @@ public class LynkTable extends JXTable implements Constants {
 	public LynkTable(TableModel dm, final boolean showFilter) {
 		super(dm);
 		init();
-		
 		if(showFilter) {
 			dm.addTableModelListener(new TableModelListener() {
 				
@@ -104,29 +105,6 @@ public class LynkTable extends JXTable implements Constants {
 				}
 			});
 		}
-	}
-	
-	public void addModelOrSorterChanged(IModelOrSorterChanged evt) {
-		modelOrSorterChanged = evt;
-		getModel().addTableModelListener(new TableModelListener() {
-			
-			@Override
-			public void tableChanged(TableModelEvent e) {
-				if(modelOrSorterChanged != null) {
-					modelOrSorterChanged.modelOrSorterChanged();
-				}
-			}
-		});
-
-		getRowSorter().addRowSorterListener(new RowSorterListener() {
-			
-			@Override
-			public void sorterChanged(RowSorterEvent e) {
-				if(modelOrSorterChanged != null) {
-					modelOrSorterChanged.modelOrSorterChanged();
-				}
-			}
-		});
 	}
 	
 	/**
@@ -291,6 +269,13 @@ public class LynkTable extends JXTable implements Constants {
 		return titleStr;
 	}
 	
+	
+	
+	@Override
+	protected JComponent createDefaultColumnControl() {
+		return new LynkColumnControlButton(this);
+	}
+
 	/**
 	 * 鼠标双击时间
 	 * @param mouseDoubleClick
@@ -450,9 +435,32 @@ public class LynkTable extends JXTable implements Constants {
 		setFont(APP_FONT);
 		setHighlighters(HighlighterFactory.createAlternateStriping(new Color(255,251,191), new Color(191,255,222)));
 	}
-	
+
 	public void setRowAlignCenter() {
 		addHighlighter(new AlignmentHighlighter(SwingConstants.CENTER));
+	}
+	
+	public void addModelOrSorterChanged(IModelOrSorterChanged evt) {
+		modelOrSorterChanged = evt;
+		getModel().addTableModelListener(new TableModelListener() {
+			
+			@Override
+			public void tableChanged(TableModelEvent e) {
+				if(modelOrSorterChanged != null) {
+					modelOrSorterChanged.modelOrSorterChanged();
+				}
+			}
+		});
+
+		getRowSorter().addRowSorterListener(new RowSorterListener() {
+			
+			@Override
+			public void sorterChanged(RowSorterEvent e) {
+				if(modelOrSorterChanged != null) {
+					modelOrSorterChanged.modelOrSorterChanged();
+				}
+			}
+		});
 	}
 	
 	public interface MouseDoubleClick {

@@ -1,7 +1,9 @@
 package com.lynk.swing.util;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -11,6 +13,8 @@ import net.sf.jasperreports.view.save.JRDocxSaveContributor;
 import net.sf.jasperreports.view.save.JRMultipleSheetsXlsSaveContributor;
 import net.sf.jasperreports.view.save.JRPdfSaveContributor;
 import net.sf.jasperreports.view.save.JRSingleSheetXlsSaveContributor;
+import net.sf.json.JsonConfig;
+import net.sf.json.processors.JsonValueProcessor;
 
 public class LynkSwingUtil {
 	/**
@@ -176,5 +180,42 @@ public class LynkSwingUtil {
 		saveContributors.add(filter4);
 		saveContributors.add(filter3);
 		return saveContributors;
+	}
+	
+	/**
+	 * 获取颜色的16位表示
+	 * @param color
+	 * @return
+	 */
+	public static String getRgbHex(Color color) {
+		String hexString = Integer.toHexString(color.getRGB());
+		return "#" + hexString.substring(2);
+	}
+	
+	/**
+	 * 防止精度丢失
+	 * @return
+	 */
+	public static JsonConfig createBigDecimalConfig() {
+		JsonConfig jsonConfig = new JsonConfig();
+		jsonConfig.registerJsonValueProcessor(BigDecimal.class, new JsonValueProcessor() {
+			
+			@Override
+			public Object processObjectValue(String key, Object value, JsonConfig jsonConfig) {
+				if(value == null) {
+					return "0";
+				}
+				if(value instanceof BigDecimal) {
+					return ((BigDecimal) value).toString();
+				}
+				return value;
+			}
+			
+			@Override
+			public Object processArrayValue(Object value, JsonConfig jsonConfig) {
+				return null;
+			}
+		});
+		return jsonConfig;
 	}
 }
