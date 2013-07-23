@@ -41,7 +41,7 @@ import org.jdesktop.swingx.table.DefaultTableColumnModelExt;
 import org.jdesktop.swingx.table.TableColumnModelExt;
 import org.jdesktop.swingx.table.TableColumnExt;
 
-import com.lynk.swing.component.table.popup.JScrollPopupMenu;
+import com.lynk.swing.component.table.popup.LynkScrollPopupMenu;
 
 /**
  * A component to allow interactive customization of <code>JXTable</code>'s
@@ -453,7 +453,7 @@ public class LynkColumnControlButton extends JButton {
      * 
      */
     public class DefaultColumnControlPopup implements ColumnControlPopup, ActionGroupable {
-        private JScrollPopupMenu popupMenu;
+        private LynkScrollPopupMenu popupMenu;
         private ActionGrouper grouper;
 
         public DefaultColumnControlPopup() {
@@ -603,7 +603,7 @@ public class LynkColumnControlButton extends JButton {
          */
         protected JPopupMenu getPopupMenu() {
             if (popupMenu == null) {
-                popupMenu = new JScrollPopupMenu();
+                popupMenu = new LynkScrollPopupMenu();
             }
             return popupMenu;
         }
