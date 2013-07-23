@@ -70,7 +70,7 @@ public class TestTable extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		contentPane.add(scrollPane, BorderLayout.CENTER);
 		
-		DefaultTableModel model = new DefaultTableModel(new String[][]{{"A", "15", "男"},{"B","22", "女"}, {"C","22", "女"}, {"D","22", "女"}, {"E","22", "女"}, {"F","22", "女"}, {"G","22", "女"}, {"H","22", "女"}, {"I","22", "女"}}, new String[]{"姓名", "年龄", "性别"});
+		DefaultTableModel model = new DefaultTableModel(new String[][]{}, new String[]{"姓名", "年龄", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别"});
 		lynkTable = new LynkTable(model, true);
 		scrollPane.setViewportView(lynkTable);
 	}
