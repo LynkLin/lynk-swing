@@ -6,8 +6,6 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -27,6 +25,7 @@ public class LynkScrollPopupMenu extends ResizablePopupMenu implements Constants
 	
 	public LynkScrollPopupMenu() {
 		super();
+		setFocusable(true);
 		
 		rootPanel = new JPanel();
 		rootPanel.setLayout(new BorderLayout(0, 5));
@@ -39,6 +38,7 @@ public class LynkScrollPopupMenu extends ResizablePopupMenu implements Constants
 		rootPanel.add(scrollPane, BorderLayout.CENTER);
 		
 		JButton uiCancel = new JButton("关闭", new ImageIcon(getClass().getResource("/resources/images/disable.png")));
+		uiCancel.setMargin(new Insets(5, 0, 5, 0));
 		uiCancel.setFocusable(false);
 		uiCancel.setMargin(new Insets(0, 0, 0, 0));
 		uiCancel.addActionListener(new ActionListener() {
@@ -52,29 +52,8 @@ public class LynkScrollPopupMenu extends ResizablePopupMenu implements Constants
 		rootPanel.add(uiCancel, BorderLayout.NORTH);
 		
 		add(rootPanel);
-		
-		addMouseListener(new MouseAdapter() {
-
-			@Override
-			public void mousePressed(MouseEvent evt) {
-				int x1 = getLocationOnScreen().x;
-				int x2 = x1 + getPreferredSize().width;
-				
-				int y1 = getLocationOnScreen().y;
-				int y2 = y1 + getPreferredSize().height;
-				
-				System.out.println(x1 + "," + x2);
-				System.out.println(y1 + "," + y2);
-				System.out.println(evt.getLocationOnScreen().x + "," + evt.getLocationOnScreen().y);
-				
-				if(evt.getLocationOnScreen().x <= x1 || evt.getLocationOnScreen().x >= x2
-					|| evt.getLocationOnScreen().y <= y1 || evt.getLocationOnScreen().y >= y2) {
-					setPopupVistible(false, true);
-				}
-			}
-		});
 	}
-
+	
 	@Override
 	public JMenuItem add(JMenuItem menuItem) {
 		panel.add(menuItem);

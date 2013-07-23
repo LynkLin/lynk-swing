@@ -74,6 +74,8 @@ public class LynkTable extends JXTable implements Constants {
 	
 	private TableColumnFilterPopup popup;
 	
+	private boolean initHighLighter = true;
+	
 	public JPopupMenu getUiPopMenu() {
 		return uiPopMenu;
 	}
@@ -88,6 +90,28 @@ public class LynkTable extends JXTable implements Constants {
 	
 	public LynkTable(TableModel dm, final boolean showFilter) {
 		super(dm);
+		init();
+		if(showFilter) {
+			dm.addTableModelListener(new TableModelListener() {
+				
+				@Override
+				public void tableChanged(TableModelEvent e) {
+					if(popup.getFilter() != null) {
+//						RowSorter<?> sorter = LynkTable.this.getRowSorter();
+//						if(sorter instanceof DefaultRowSorter<?, ?>) {
+//							((DefaultRowSorter<?, ?>) sorter).setRowFilter(null);
+//						}
+						popup.getFilter().setFilter(LynkTable.this);
+						popup.refreshUiFilterList();
+					}
+				}
+			});
+		}
+	}
+	
+	public LynkTable(TableModel dm, final boolean showFilter, boolean initHighLighter) {
+		super(dm);
+		this.initHighLighter = initHighLighter;
 		init();
 		if(showFilter) {
 			dm.addTableModelListener(new TableModelListener() {
@@ -433,7 +457,9 @@ public class LynkTable extends JXTable implements Constants {
 		getTableHeader().setForeground(Color.BLUE);
 		setColumnControlVisible(true);
 		setFont(APP_FONT);
-		setHighlighters(HighlighterFactory.createAlternateStriping(new Color(255,251,191), new Color(191,255,222)));
+		if(initHighLighter) {
+			setHighlighters(HighlighterFactory.createAlternateStriping(new Color(255,251,191), new Color(191,255,222)));
+		}
 	}
 
 	public void setRowAlignCenter() {
