@@ -5,7 +5,6 @@ import javax.swing.JDialog;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Toolkit;
-import javax.swing.JToolBar;
 import java.awt.BorderLayout;
 import javax.swing.JButton;
 
@@ -16,7 +15,6 @@ import javax.swing.JScrollPane;
 import javax.swing.RowSorter;
 import javax.swing.SwingWorker;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
@@ -38,36 +36,28 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 import com.jidesoft.swing.CheckBoxList;
 import com.lynk.swing.common.Constants;
+import javax.swing.JCheckBox;
 
 public class LynkTableExportDialog extends LynkDialog implements Constants {
 	private static final long serialVersionUID = 1L;
 	
 	private JFileChooser fileChooser;
-	private JTextField uiFilePath;
 	private CheckBoxList uiColumnName;
 	
-	private boolean autoWidth;
 	private LynkTable table;
+	private JCheckBox uiAutoWidth;
 
 	public static void showDialog(Component parent, LynkTable table) {
-		LynkTableExportDialog dialog = new LynkTableExportDialog(table, false);
-		dialog.setLocationRelativeTo(parent);
-		dialog.setVisible(true);
-	}
-	
-	public static void showDialog(Component parent, LynkTable table, boolean autoWidth) {
-		LynkTableExportDialog dialog = new LynkTableExportDialog(table, autoWidth);
+		LynkTableExportDialog dialog = new LynkTableExportDialog(table);
 		dialog.setLocationRelativeTo(parent);
 		dialog.setVisible(true);
 	}
 
-	private LynkTableExportDialog(LynkTable table, boolean autoWidth) {
-		this.autoWidth = autoWidth;
+	private LynkTableExportDialog(LynkTable table) {
 		this.table = table;
 		initComponents();
 	}
@@ -77,41 +67,6 @@ public class LynkTableExportDialog extends LynkDialog implements Constants {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setBounds(100, 100, 582, 618);
-		
-		JToolBar toolBar = new JToolBar();
-		toolBar.setFloatable(false);
-		getContentPane().add(toolBar, BorderLayout.NORTH);
-		
-		JButton uiSave = new JButton("开始导出");
-		uiSave.setFocusable(false);
-		uiSave.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				uiSaveActionPerformed(e);
-			}
-		});
-		uiSave.setIcon(new ImageIcon(LynkTableExportDialog.class.getResource("/resources/images/save.png")));
-		uiSave.setFont(APP_FONT);
-		toolBar.add(uiSave);
-		
-		JButton uiSelectAll = new JButton("全选");
-		uiSelectAll.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				uiSelectAllActionPerformed(e);
-			}
-		});
-		uiSelectAll.setIcon(new ImageIcon(LynkTableExportDialog.class.getResource("/resources/images/enable.png")));
-		uiSelectAll.setFont(APP_FONT);
-		toolBar.add(uiSelectAll);
-		
-		JButton uiDeselectAll = new JButton("全消");
-		uiDeselectAll.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				uiDeselectAllActionPerformed(e);
-			}
-		});
-		uiDeselectAll.setIcon(new ImageIcon(LynkTableExportDialog.class.getResource("/resources/images/disable.png")));
-		uiDeselectAll.setFont(APP_FONT);
-		toolBar.add(uiDeselectAll);
 		
 		fileChooser = new JFileChooser();
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -138,19 +93,31 @@ public class LynkTableExportDialog extends LynkDialog implements Constants {
 		JPanel panel = new JPanel();
 		getContentPane().add(panel, BorderLayout.CENTER);
 		
-		uiFilePath = new JTextField();
-		uiFilePath.setEditable(false);
-		uiFilePath.setFont(APP_FONT);
-		
 		JScrollPane scrollPane = new JScrollPane();
 		
-		JButton uiChooseFile = new JButton("保存路径");
-		uiChooseFile.addActionListener(new ActionListener() {
+		JButton uiSave = new JButton("保存");
+		uiSave.setFocusable(false);
+		uiSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				uiChooseFileActionPerformed(e);
+				uiSaveActionPerformed(e);
 			}
 		});
-		uiChooseFile.setFont(APP_FONT);
+		uiSave.setIcon(new ImageIcon(LynkTableExportDialog.class.getResource("/resources/images/save.png")));
+		uiSave.setFont(APP_FONT);
+		
+		JButton uiSelectAll = new JButton("全选");
+		uiSelectAll.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				uiSelectAllActionPerformed(e);
+			}
+		});
+		uiSelectAll.setIcon(new ImageIcon(LynkTableExportDialog.class.getResource("/resources/images/enable.png")));
+		uiSelectAll.setFont(APP_FONT);
+		
+		uiAutoWidth = new JCheckBox("自动调整Excel列宽");
+		uiAutoWidth.setFont(APP_FONT);
+		uiAutoWidth.setToolTipText("数据量大时会导致导出缓慢!");
+		
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
@@ -159,20 +126,24 @@ public class LynkTableExportDialog extends LynkDialog implements Constants {
 					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
 						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)
 						.addGroup(gl_panel.createSequentialGroup()
-							.addComponent(uiChooseFile)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(uiFilePath, GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)))
+							.addComponent(uiSave)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(uiSelectAll)
+							.addGap(18)
+							.addComponent(uiAutoWidth)))
 					.addContainerGap())
 		);
 		gl_panel.setVerticalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(uiFilePath, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(uiChooseFile))
+					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+						.addComponent(uiSave)
+						.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+							.addComponent(uiSelectAll)
+							.addComponent(uiAutoWidth)))
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 531, Short.MAX_VALUE)
 					.addContainerGap())
 		);
 		
@@ -189,19 +160,13 @@ public class LynkTableExportDialog extends LynkDialog implements Constants {
 		panel.setLayout(gl_panel);
 	}
 	
-	protected void uiChooseFileActionPerformed(ActionEvent evt) {
-		int op = fileChooser.showSaveDialog(this);
-		if(op == JFileChooser.APPROVE_OPTION) {
-			File saveFile = fileChooser.getSelectedFile();
-			uiFilePath.setText(saveFile.getPath());
-		}
-	}
-	
 	protected void uiSaveActionPerformed(ActionEvent evt) {
-		if(StringUtils.isEmpty(uiFilePath.getText().trim())) {
-			showErrorMsg("请选择保存路径!");
+		int op = fileChooser.showSaveDialog(this);
+		if(op != JFileChooser.APPROVE_OPTION) {
 			return;
 		}
+		final File saveFile = fileChooser.getSelectedFile();
+		
 		final int[] exportedColumnIndexes = uiColumnName.getCheckBoxListSelectedIndices();
 		if(exportedColumnIndexes.length == 0) {
 			showErrorMsg("请至少选择一项!");
@@ -270,14 +235,13 @@ public class LynkTableExportDialog extends LynkDialog implements Constants {
 					publish("处理中, " + (rowIndex + 1) + "/" + sorter.getViewRowCount());
 				}
 				
-				if(autoWidth) {
+				if(uiAutoWidth.isSelected()) {
 					publish("设置列宽......");
 					for(short i = 0; i < exportedColumnIndexes.length; i++) {
 						sheet.autoSizeColumn(i);
 					}
 				}
 				publish("保存文件......");
-				File saveFile = new File(uiFilePath.getText());
 				OutputStream os = new FileOutputStream(saveFile);
 				wb.write(os);
 				os.flush();
@@ -307,11 +271,11 @@ public class LynkTableExportDialog extends LynkDialog implements Constants {
 		}.execute();
 	}
 	
-	protected void uiDeselectAllActionPerformed(ActionEvent evt) {
-		uiColumnName.selectNone();
-	}
-	
 	protected void uiSelectAllActionPerformed(ActionEvent evt) {
-		uiColumnName.selectAll();
+		if(uiColumnName.getCheckBoxListSelectedIndices().length == uiColumnName.getModel().getSize()) {
+			uiColumnName.selectNone();
+		} else {
+			uiColumnName.selectAll();
+		}
 	}
 }

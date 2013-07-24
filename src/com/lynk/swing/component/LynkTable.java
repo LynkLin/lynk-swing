@@ -301,7 +301,7 @@ public class LynkTable extends JXTable implements Constants {
 	}
 
 	/**
-	 * 鼠标双击时间
+	 * 鼠标双击事件
 	 * @param mouseDoubleClick
 	 */
 	public void setMouseDoubleClick(MouseDoubleClick mouseDoubleClick) {
@@ -309,7 +309,7 @@ public class LynkTable extends JXTable implements Constants {
 	}
 
 	/**
-	 * popmenu 新增时间
+	 * popmenu 新增事件
 	 * @param menuAddAction
 	 */
 	public void setMenuAddAction(MenuAddAction menuAddAction) {
@@ -327,7 +327,7 @@ public class LynkTable extends JXTable implements Constants {
 	}
 
 	/**
-	 * popmenu 删除时间
+	 * popmenu 删除事件
 	 * @param menuDeleteAction
 	 */
 	public void setMenuDeleteAction(MenuDeleteAction menuDeleteAction) {
@@ -345,7 +345,7 @@ public class LynkTable extends JXTable implements Constants {
 	}
 	
 	/**
-	 * popmenu 还原时间
+	 * popmenu 还原事件
 	 * @param menuRestoreAction
 	 */
 	public void setMenuRestoreAction(MenuRestoreAction menuRestoreAction) {
@@ -413,16 +413,17 @@ public class LynkTable extends JXTable implements Constants {
 						bSelectAll = false;
 					} else {
 						Point p = evt.getPoint();
-						int pointIndex = rowAtPoint(p);
-						if(pointIndex == -1) {
+						int rowIndex = rowAtPoint(p);
+						int columnIndex = columnAtPoint(p);
+						if(rowIndex == -1 && columnIndex == -1) {
 							clearSelection();
 							bAdd = true;
 							bDelete = false;
 							bSelectAll = true;
 						} else {//pointIndex != -1
-							if(!isRowSelected(pointIndex)) {//鼠标处选中
-								setRowSelectionInterval(pointIndex, pointIndex);
-								setColumnSelectionInterval(0, getColumnCount() - 1);
+							if(!isRowSelected(rowIndex)) {//鼠标处选中
+								setRowSelectionInterval(rowIndex, rowIndex);
+								setColumnSelectionInterval(columnIndex, columnIndex);
 							}
 							bAdd = true;
 							bDelete = true;
