@@ -12,7 +12,9 @@ import javax.swing.FocusManager;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
-public class LynkPanel extends JPanel {
+import com.lynk.swing.common.Constants;
+
+public class LynkPanel extends JPanel implements Constants {
 	private static final long serialVersionUID = 1L;
 
 	public LynkPanel() {

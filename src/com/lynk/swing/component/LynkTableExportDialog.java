@@ -6,13 +6,14 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Toolkit;
 import java.awt.BorderLayout;
-import javax.swing.JButton;
 
+import javax.swing.JButton;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JScrollPane;
 import javax.swing.RowSorter;
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -34,22 +35,31 @@ import java.io.OutputStream;
 import java.util.List;
 
 import javax.swing.JPanel;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
 
-import com.jidesoft.swing.CheckBoxList;
 import com.lynk.swing.common.Constants;
+
 import javax.swing.JCheckBox;
+import javax.swing.border.TitledBorder;
+import javax.swing.JList;
+
+import java.awt.Insets;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class LynkTableExportDialog extends LynkDialog implements Constants {
 	private static final long serialVersionUID = 1L;
 	
 	private JFileChooser fileChooser;
-	private CheckBoxList uiColumnName;
+	
 	
 	private LynkTable table;
 	private JCheckBox uiAutoWidth;
+	
+	private DefaultListModel<ExportedColumn> uiLeftColumnModel;
+	private DefaultListModel<ExportedColumn> uiRightColumnModel;
+	
+	private JList<ExportedColumn> uiLeftColumn;
+	private JList<ExportedColumn> uiRightColumn;
 
 	public static void showDialog(Component parent, LynkTable table) {
 		LynkTableExportDialog dialog = new LynkTableExportDialog(table);
@@ -62,6 +72,7 @@ public class LynkTableExportDialog extends LynkDialog implements Constants {
 		initComponents();
 	}
 	private void initComponents() {
+		setResizable(false);
 		setTitle("导出");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(LynkTableExportDialog.class.getResource("/resources/images/export.png")));
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -94,9 +105,12 @@ public class LynkTableExportDialog extends LynkDialog implements Constants {
 		getContentPane().add(panel, BorderLayout.CENTER);
 		
 		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 43, 254, 533);
+		scrollPane.setBorder(new TitledBorder(null, "\u4E0D\u7528\u5BFC\u51FA\u7684\u5217", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		
 		JButton uiSave = new JButton("保存");
 		uiSave.setFocusable(false);
+		uiSave.setBounds(10, 10, 81, 27);
 		uiSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				uiSaveActionPerformed(e);
@@ -106,6 +120,8 @@ public class LynkTableExportDialog extends LynkDialog implements Constants {
 		uiSave.setFont(APP_FONT);
 		
 		JButton uiSelectAll = new JButton("全选");
+		uiSelectAll.setFocusable(false);
+		uiSelectAll.setBounds(101, 10, 81, 27);
 		uiSelectAll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				uiSelectAllActionPerformed(e);
@@ -115,49 +131,77 @@ public class LynkTableExportDialog extends LynkDialog implements Constants {
 		uiSelectAll.setFont(APP_FONT);
 		
 		uiAutoWidth = new JCheckBox("自动调整Excel列宽");
+		uiAutoWidth.setFocusable(false);
+		uiAutoWidth.setBounds(200, 10, 143, 27);
 		uiAutoWidth.setFont(APP_FONT);
 		uiAutoWidth.setToolTipText("数据量大时会导致导出缓慢!");
 		
-		GroupLayout gl_panel = new GroupLayout(panel);
-		gl_panel.setHorizontalGroup(
-			gl_panel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)
-						.addGroup(gl_panel.createSequentialGroup()
-							.addComponent(uiSave)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(uiSelectAll)
-							.addGap(18)
-							.addComponent(uiAutoWidth)))
-					.addContainerGap())
-		);
-		gl_panel.setVerticalGroup(
-			gl_panel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-						.addComponent(uiSave)
-						.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-							.addComponent(uiSelectAll)
-							.addComponent(uiAutoWidth)))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 531, Short.MAX_VALUE)
-					.addContainerGap())
-		);
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBorder(new TitledBorder(null, "\u5BFC\u51FA\u7684\u5217", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		scrollPane_1.setBounds(312, 43, 254, 533);
 		
-		DefaultListModel<String> listModel = new DefaultListModel<>();
+		uiLeftColumnModel = new DefaultListModel<>();
 		TableModel model = table.getModel();
 		for(int i = 0; i < model.getColumnCount(); i ++) {
-			String columnName = model.getColumnName(i);
-			listModel.addElement(columnName);
+			ExportedColumn column = new ExportedColumn(model.getColumnName(i), i);
+			uiLeftColumnModel.addElement(column);
 		}
-		uiColumnName = new CheckBoxList(listModel);
-		uiColumnName.setFont(APP_FONT);
-		scrollPane.setViewportView(uiColumnName);
-		uiColumnName.selectAll();
-		panel.setLayout(gl_panel);
+		uiLeftColumn = new JList<ExportedColumn>(uiLeftColumnModel);
+		uiLeftColumn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				uiColumnNameMouseClicked(e);
+			}
+		});
+		uiLeftColumn.setToolTipText("双击添加");
+		uiLeftColumn.setFont(APP_FONT);
+		scrollPane.setViewportView(uiLeftColumn);
+		panel.setLayout(null);
+		panel.add(scrollPane_1);
+		
+		uiRightColumnModel = new DefaultListModel<>();
+		uiRightColumn = new JList<ExportedColumn>(uiRightColumnModel);
+		uiRightColumn.setFont(APP_FONT);
+		uiRightColumn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				uiExportedColumnMouseClicked(e);
+			}
+		});
+		uiRightColumn.setToolTipText("双击删除");
+		scrollPane_1.setViewportView(uiRightColumn);
+		panel.add(scrollPane);
+		panel.add(uiSave);
+		panel.add(uiSelectAll);
+		panel.add(uiAutoWidth);
+		
+		JButton uiToRight = new JButton(">>");
+		uiToRight.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				uiToRightActionPerformed(e);
+			}
+		});
+		uiToRight.setFocusable(false);
+		uiToRight.setForeground(Color.BLUE);
+		uiToRight.setToolTipText("");
+		uiToRight.setFont(APP_FONT);
+		uiToRight.setMargin(new Insets(0, 0, 0, 0));
+		uiToRight.setBounds(274, 170, 28, 28);
+		panel.add(uiToRight);
+		
+		JButton uiToLeft = new JButton("<<");
+		uiToLeft.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				uiToLeftActionPerformed(e);
+			}
+		});
+		uiToLeft.setFocusable(false);
+		uiToLeft.setForeground(Color.BLUE);
+		uiToLeft.setToolTipText("");
+		uiToLeft.setFont(APP_FONT);
+		uiToLeft.setMargin(new Insets(0, 0, 0, 0));
+		uiToLeft.setBounds(274, 245, 28, 28);
+		panel.add(uiToLeft);
 	}
 	
 	protected void uiSaveActionPerformed(ActionEvent evt) {
@@ -167,8 +211,7 @@ public class LynkTableExportDialog extends LynkDialog implements Constants {
 		}
 		final File saveFile = fileChooser.getSelectedFile();
 		
-		final int[] exportedColumnIndexes = uiColumnName.getCheckBoxListSelectedIndices();
-		if(exportedColumnIndexes.length == 0) {
+		if(uiRightColumnModel.size() == 0) {
 			showErrorMsg("请至少选择一项!");
 			return;
 		}
@@ -209,8 +252,8 @@ public class LynkTableExportDialog extends LynkDialog implements Constants {
 				TableModel model = table.getModel();
 				//先做表头
 				row = sheet.createRow(0);
-				for(int columnIndex = 0; columnIndex < exportedColumnIndexes.length; columnIndex++) {
-					String columnName = model.getColumnName(exportedColumnIndexes[columnIndex]);
+				for(int columnIndex = 0; columnIndex < uiRightColumnModel.size(); columnIndex++) {
+					String columnName = uiRightColumnModel.get(columnIndex).getColumnName();
 					cell = row.createCell(columnIndex);
 					cell.setCellStyle(titleStyle);
 					cell.setCellType(XSSFCell.CELL_TYPE_STRING);
@@ -220,10 +263,10 @@ public class LynkTableExportDialog extends LynkDialog implements Constants {
 				RowSorter<?> sorter = table.getRowSorter();
 				for(int rowIndex = 0; rowIndex < sorter.getViewRowCount(); rowIndex++) {
 					row = sheet.createRow(rowIndex + 1);
-					for(int columnIndex = 0; columnIndex < exportedColumnIndexes.length; columnIndex++) {
+					for(int columnIndex = 0; columnIndex < uiRightColumnModel.getSize(); columnIndex++) {
 						cell = row.createCell(columnIndex);
 						cell.setCellStyle(contentStyle);
-						Object value = model.getValueAt(sorter.convertRowIndexToModel(rowIndex), exportedColumnIndexes[columnIndex]);
+						Object value = model.getValueAt(sorter.convertRowIndexToModel(rowIndex), uiRightColumnModel.get(columnIndex).getModelIndex());
 						if(value instanceof Color) {
 							cell.setCellType(XSSFCell.CELL_TYPE_STRING);
 							cell.setCellValue(((Color) value).getRGB());
@@ -237,7 +280,7 @@ public class LynkTableExportDialog extends LynkDialog implements Constants {
 				
 				if(uiAutoWidth.isSelected()) {
 					publish("设置列宽......");
-					for(short i = 0; i < exportedColumnIndexes.length; i++) {
+					for(short i = 0; i < uiRightColumnModel.size(); i++) {
 						sheet.autoSizeColumn(i);
 					}
 				}
@@ -272,10 +315,87 @@ public class LynkTableExportDialog extends LynkDialog implements Constants {
 	}
 	
 	protected void uiSelectAllActionPerformed(ActionEvent evt) {
-		if(uiColumnName.getCheckBoxListSelectedIndices().length == uiColumnName.getModel().getSize()) {
-			uiColumnName.selectNone();
+		if(uiLeftColumnModel.getSize() > 0) {
+			uiLeftColumn.setSelectionInterval(0, uiLeftColumnModel.size() - 1);
+			moveToRight();
 		} else {
-			uiColumnName.selectAll();
+			uiRightColumn.setSelectionInterval(0, uiRightColumnModel.size() - 1);
+			moveToLeft();
+		}
+	}
+	
+	protected void uiToLeftActionPerformed(ActionEvent evt) {
+		moveToLeft();
+	}
+	
+	protected void uiToRightActionPerformed(ActionEvent evt) {
+		moveToRight();
+	}
+	
+	protected void uiExportedColumnMouseClicked(MouseEvent evt) {
+		if(SwingUtilities.isLeftMouseButton(evt) && evt.getClickCount() == 2) {
+			moveToLeft();
+		}
+	}
+	
+	protected void uiColumnNameMouseClicked(MouseEvent evt) {
+		if(SwingUtilities.isLeftMouseButton(evt) && evt.getClickCount() == 2) {
+			moveToRight();
+		}
+	}
+	
+	private void moveToRight() {
+		List<ExportedColumn> columns = uiLeftColumn.getSelectedValuesList();
+		for(ExportedColumn column: columns) {
+			uiRightColumnModel.addElement(column);
+			uiLeftColumnModel.removeElement(column);
+		}
+	}
+	
+	private void moveToLeft() {
+		List<ExportedColumn> columns = uiRightColumn.getSelectedValuesList();
+		for(ExportedColumn column: columns) {
+			uiLeftColumnModel.addElement(column);
+			uiRightColumnModel.removeElement(column);
+		}
+	}
+	
+	class ExportedColumn {
+		private String columnName;
+		private int modelIndex;
+		
+		public ExportedColumn(String columnName, int modelIndex) {
+			this.columnName = columnName;
+			this.modelIndex = modelIndex;
+		}
+
+		public String getColumnName() {
+			return columnName;
+		}
+		
+		public void setColumnName(String columnName) {
+			this.columnName = columnName;
+		}
+		
+		public int getModelIndex() {
+			return modelIndex;
+		}
+		
+		public void setModelIndex(int modelIndex) {
+			this.modelIndex = modelIndex;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if(obj instanceof ExportedColumn) {
+				return ((ExportedColumn) obj).columnName.equals(columnName);
+			}
+			return false;
+		}
+
+		@Override
+		public String toString() {
+			return columnName;
 		}
 	}
 }
