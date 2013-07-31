@@ -1,4 +1,4 @@
-package com.lynk.swing.component;
+package com.lynk.swing.component.report;
 
 import net.sf.jasperreports.swing.JRViewerController;
 import net.sf.jasperreports.swing.JRViewerToolbar;

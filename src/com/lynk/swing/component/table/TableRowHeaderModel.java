@@ -1,4 +1,4 @@
-package com.lynk.swing.component;
+package com.lynk.swing.component.table;
 
 import javax.swing.table.AbstractTableModel;
 

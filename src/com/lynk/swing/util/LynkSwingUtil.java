@@ -1,6 +1,8 @@
 package com.lynk.swing.util;
 
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -63,6 +65,16 @@ public class LynkSwingUtil {
 			} catch (IOException e) {
 			}
 		}
+	}
+	
+	/**
+	 * 获取屏幕最大尺寸
+	 * @return
+	 */
+	public static Dimension getMaxDialogSize() {
+		int height = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 80;
+		int width = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 100;
+		return new Dimension(width, height);
 	}
 	
 	/**

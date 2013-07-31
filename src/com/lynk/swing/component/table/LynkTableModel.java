@@ -1,4 +1,4 @@
-package com.lynk.swing.component;
+package com.lynk.swing.component.table;
 
 import java.util.ArrayList;
 import java.util.Arrays;

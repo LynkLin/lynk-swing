@@ -1,4 +1,4 @@
-package com.lynk.swing.component;
+package com.lynk.swing.component.common;
 
 /**
  * 18:12 17/02/2005

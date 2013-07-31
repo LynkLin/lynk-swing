@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
 import com.lynk.swing.common.Constants;
+import com.lynk.swing.component.common.InfiniteProgressPanel;
 
 public class LynkDialog extends JDialog implements Constants {
 	private static final long serialVersionUID = 1L;
