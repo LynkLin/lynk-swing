@@ -187,10 +187,10 @@ public class LynkTable extends JXTable implements Constants {
 		TableColumnModel cm = getColumnModel();
 		for (int i = 0; i < (cm.getColumnCount() < sizeStrs.length ? cm
 				.getColumnCount() : sizeStrs.length); i++) {
-			if(Integer.parseInt(sizeStrs[i]) < 0) {
+			if(Integer.parseInt(sizeStrs[i].trim()) < 0) {
 				cm.getColumn(i).setResizable(false);
 			}
-			cm.getColumn(i).setPreferredWidth(Math.abs(Integer.parseInt(sizeStrs[i])));
+			cm.getColumn(i).setPreferredWidth(Math.abs(Integer.parseInt(sizeStrs[i].trim())));
 		}
 	}
 	
