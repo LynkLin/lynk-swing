@@ -8,9 +8,6 @@ import javax.swing.table.AbstractTableModel;
 
 public class LynkTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
-
-	public static final int ORDER_UP = 0;
-	public static final int ORDER_DOWN = 1;
 	
 	protected String[] head;
 
@@ -57,6 +54,11 @@ public class LynkTableModel extends AbstractTableModel {
 			return head.length;
 		}
 		return 0;
+	}
+	
+	@Override
+	public String getColumnName(int column) {
+		return head[column];
 	}
 	
 	@Override
