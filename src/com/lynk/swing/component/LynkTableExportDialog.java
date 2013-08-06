@@ -37,6 +37,7 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import com.lynk.swing.common.Constants;
+import com.lynk.swing.util.Utils;
 
 import javax.swing.JCheckBox;
 import javax.swing.border.TitledBorder;
@@ -99,7 +100,7 @@ public class LynkTableExportDialog extends LynkDialog implements Constants {
 				return false;
 			}
 		});
-		fileChooser.setSelectedFile(new File("导出的资料.xlsx"));
+		fileChooser.setSelectedFile(new File("HRM导出_" + Utils.getNowStr() + ".xlsx"));
 		
 		JPanel panel = new JPanel();
 		getContentPane().add(panel, BorderLayout.CENTER);
