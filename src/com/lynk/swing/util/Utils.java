@@ -2,11 +2,11 @@ package com.lynk.swing.util;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.Date;
 
 public class Utils {
 	private static DateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
 	public static String getNowStr() {
-		return format.format(Calendar.getInstance());
+		return format.format(new Date());
 	}
 }
