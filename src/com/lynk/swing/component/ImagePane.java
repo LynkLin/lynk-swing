@@ -16,11 +16,7 @@ public class ImagePane extends javax.swing.JPanel {
 
 	private Image image;
 
-	public ImagePane() {
-		initComponents();
-	}
-
-	public void setImage(String imageName) {
+	public ImagePane(String imageName) {
 		InputStream is = null;
 		try {
 			is = this.getClass().getClassLoader().getResourceAsStream("resource/image/" + imageName);
@@ -38,19 +34,6 @@ public class ImagePane extends javax.swing.JPanel {
 				e.printStackTrace();
 			}
 		}
-
-	}
-
-	private void initComponents() {
-
-		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-		this.setLayout(layout);
-		layout.setHorizontalGroup(layout.createParallelGroup(
-				javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 79,
-				Short.MAX_VALUE));
-		layout.setVerticalGroup(layout.createParallelGroup(
-				javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 91,
-				Short.MAX_VALUE));
 	}
 
 	@Override
