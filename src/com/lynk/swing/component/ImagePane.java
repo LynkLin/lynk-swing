@@ -2,6 +2,7 @@ package com.lynk.swing.component;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -16,10 +17,34 @@ public class ImagePane extends javax.swing.JPanel {
 
 	private Image image;
 
+	public ImagePane() {
+		
+	}
+	
 	public ImagePane(String imageName) {
 		InputStream is = null;
 		try {
 			is = this.getClass().getClassLoader().getResourceAsStream("resource/image/" + imageName);
+			image = ImageIO.read(is);
+			image.flush();
+			repaint();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (is != null) {
+					is.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void setImage(String imagePath) {
+		InputStream is = null;
+		try {
+			is = new FileInputStream(imagePath);
 			image = ImageIO.read(is);
 			image.flush();
 			repaint();
