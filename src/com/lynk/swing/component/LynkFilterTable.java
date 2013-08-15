@@ -8,6 +8,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -16,6 +17,11 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.event.RowSorterEvent;
+import javax.swing.event.RowSorterListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
@@ -25,8 +31,11 @@ import org.jdesktop.swingx.decorator.HighlighterFactory;
 import org.jdesktop.swingx.table.TableColumnExt;
 
 import com.lynk.swing.common.Constants;
+import com.lynk.swing.component.table.FilterTableHeaderRenderer;
 import com.lynk.swing.component.table.LynkColumnControlButton;
 import com.lynk.swing.component.table.MultiLineTableHeadRenderer;
+import com.lynk.swing.component.table.TableColumnFilterPopup;
+import com.lynk.swing.component.table.TableFilter;
 
 /**
  * 自定义
@@ -36,7 +45,7 @@ import com.lynk.swing.component.table.MultiLineTableHeadRenderer;
  * @author Administrator
  *
  */
-public class LynkTable extends JXTable implements Constants {
+public class LynkFilterTable extends JXTable implements Constants {
 	private static final long serialVersionUID = 1L;
 
 	private static final String DEFAULT_SELECT_ALL_TEXT = "全选";
@@ -61,16 +70,39 @@ public class LynkTable extends JXTable implements Constants {
 	private MenuDeleteAction menuDeleteAction;
 	private MenuRestoreAction menuRestoreAction;
 	
+	private IModelOrSorterChanged modelOrSorterChanged;
+	
+	private TableColumnFilterPopup popup;
+	
 	private boolean initHighLighter = true;
 	
 	public JPopupMenu getUiPopMenu() {
 		return uiPopMenu;
 	}
 
-	public LynkTable(TableModel dm, boolean initHighLighter) {
+	
+	public LynkFilterTable(TableModel dm) {
+		this(dm, true);
+	}
+	
+	public LynkFilterTable(TableModel dm, boolean initHighLighter) {
 		super(dm);
 		this.initHighLighter = initHighLighter;
 		init();
+		dm.addTableModelListener(new TableModelListener() {
+			
+			@Override
+			public void tableChanged(TableModelEvent e) {
+				if(popup.getFilter() != null) {
+//					RowSorter<?> sorter = LynkTable.this.getRowSorter();
+//					if(sorter instanceof DefaultRowSorter<?, ?>) {
+//						((DefaultRowSorter<?, ?>) sorter).setRowFilter(null);
+//					}
+					popup.getFilter().setFilter(LynkFilterTable.this);
+					popup.refreshUiFilterList();
+				}
+			}
+		});
 	}
 	
 	/**
@@ -262,7 +294,7 @@ public class LynkTable extends JXTable implements Constants {
 			
 			@Override
 			public void actionPerformed(ActionEvent evt) {
-				LynkTable.this.menuAddAction.add();
+				LynkFilterTable.this.menuAddAction.add();
 			}
 		});
 		uiPopMenu.add(uiAdd);
@@ -280,7 +312,7 @@ public class LynkTable extends JXTable implements Constants {
 			
 			@Override
 			public void actionPerformed(ActionEvent evt) {
-				LynkTable.this.menuDeleteAction.delete(getSelectedRows());
+				LynkFilterTable.this.menuDeleteAction.delete(getSelectedRows());
 			}
 		});
 		uiPopMenu.add(uiDelete);
@@ -298,13 +330,20 @@ public class LynkTable extends JXTable implements Constants {
 			
 			@Override
 			public void actionPerformed(ActionEvent evt) {
-				LynkTable.this.menuRestoreAction.restore(getSelectedRows());
+				LynkFilterTable.this.menuRestoreAction.restore(getSelectedRows());
 			}
 		});
 		uiPopMenu.add(uiRestore);
 	}
 
 	private void init() {
+		TableFilter filter = new TableFilter(this);
+		popup = new TableColumnFilterPopup(true, filter);
+		FilterTableHeaderRenderer renderer = new FilterTableHeaderRenderer(filter);
+		for(TableColumn column : Collections.list(getColumnModel().getColumns())) {
+			column.setHeaderRenderer(renderer);
+		}
+		
 		uiPopMenu = new JPopupMenu();
 		
 		uiSelectAll = new JMenuItem(selectAllText, new ImageIcon(this.getClass().getResource("/resources/images/select-all.png")));
@@ -374,7 +413,7 @@ public class LynkTable extends JXTable implements Constants {
 					if(uiSelectAll != null) {
 						uiSelectAll.setEnabled(bSelectAll);
 					}
-					uiPopMenu.show(LynkTable.this, evt.getX(), evt.getY());
+					uiPopMenu.show(LynkFilterTable.this, evt.getX(), evt.getY());
 				}
 			}
 		});
@@ -402,6 +441,29 @@ public class LynkTable extends JXTable implements Constants {
 		addHighlighter(new AlignmentHighlighter(SwingConstants.CENTER));
 	}
 	
+	public void addModelOrSorterChanged(IModelOrSorterChanged evt) {
+		modelOrSorterChanged = evt;
+		getModel().addTableModelListener(new TableModelListener() {
+			
+			@Override
+			public void tableChanged(TableModelEvent e) {
+				if(modelOrSorterChanged != null) {
+					modelOrSorterChanged.modelOrSorterChanged();
+				}
+			}
+		});
+
+		getRowSorter().addRowSorterListener(new RowSorterListener() {
+			
+			@Override
+			public void sorterChanged(RowSorterEvent e) {
+				if(modelOrSorterChanged != null) {
+					modelOrSorterChanged.modelOrSorterChanged();
+				}
+			}
+		});
+	}
+	
 	public interface MouseDoubleClick {
 		void doubleClick(int index);
 	}
@@ -416,5 +478,9 @@ public class LynkTable extends JXTable implements Constants {
 	
 	public interface MenuRestoreAction {
 		void restore(int indexes[]);
+	}
+	
+	public interface IModelOrSorterChanged {
+		void modelOrSorterChanged();
 	}
 }

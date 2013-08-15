@@ -23,6 +23,7 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.jdesktop.swingx.JXTable;
 
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.TableModel;
@@ -53,7 +54,7 @@ public class LynkTableExportDialog extends LynkDialog implements Constants {
 	private JFileChooser fileChooser;
 	
 	
-	private LynkTable table;
+	private JXTable table;
 	private JCheckBox uiAutoWidth;
 	
 	private DefaultListModel<ExportedColumn> uiLeftColumnModel;
@@ -62,13 +63,13 @@ public class LynkTableExportDialog extends LynkDialog implements Constants {
 	private JList<ExportedColumn> uiLeftColumn;
 	private JList<ExportedColumn> uiRightColumn;
 
-	public static void showDialog(Component parent, LynkTable table) {
+	public static void showDialog(Component parent, JXTable table) {
 		LynkTableExportDialog dialog = new LynkTableExportDialog(table);
 		dialog.setLocationRelativeTo(parent);
 		dialog.setVisible(true);
 	}
 
-	private LynkTableExportDialog(LynkTable table) {
+	private LynkTableExportDialog(JXTable table) {
 		this.table = table;
 		initComponents();
 	}

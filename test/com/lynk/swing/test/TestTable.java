@@ -6,13 +6,15 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import com.lynk.swing.component.LynkTable;
+
+import com.lynk.swing.component.LynkFilterTable;
 import com.lynk.swing.component.LynkTableExportDialog;
 
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.JButton;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -23,7 +25,7 @@ public class TestTable extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private LynkTable lynkTable;
+	private LynkFilterTable lynkTable;
 
 	/**
 	 * Launch the application.
@@ -70,8 +72,8 @@ public class TestTable extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		contentPane.add(scrollPane, BorderLayout.CENTER);
 		
-		DefaultTableModel model = new DefaultTableModel(new String[][]{}, new String[]{"姓名", "年龄", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别"});
-		lynkTable = new LynkTable(model, true);
+		DefaultTableModel model = new DefaultTableModel(new String[][]{}, new String[]{"姓名", "年龄", "性别", "出生日期", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别"});
+		lynkTable = new LynkFilterTable(model, true);
 		scrollPane.setViewportView(lynkTable);
 	}
 
