@@ -67,6 +67,10 @@ public class LynkTable extends JXTable implements Constants {
 		return uiPopMenu;
 	}
 
+	public LynkTable(TableModel dm) {
+		this(dm, true);
+	}
+	
 	public LynkTable(TableModel dm, boolean initHighLighter) {
 		super(dm);
 		this.initHighLighter = initHighLighter;
