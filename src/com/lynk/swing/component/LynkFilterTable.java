@@ -21,6 +21,7 @@ import javax.swing.event.RowSorterEvent;
 import javax.swing.event.RowSorterListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
@@ -33,7 +34,6 @@ import org.jdesktop.swingx.table.TableColumnExt;
 import com.lynk.swing.common.Constants;
 import com.lynk.swing.component.table.FilterTableHeaderRenderer;
 import com.lynk.swing.component.table.LynkColumnControlButton;
-import com.lynk.swing.component.table.MultiLineTableHeadRenderer;
 import com.lynk.swing.component.table.TableColumnFilterPopup;
 import com.lynk.swing.component.table.TableFilter;
 
@@ -428,8 +428,10 @@ public class LynkFilterTable extends JXTable implements Constants {
 		setColumnSelectionAllowed(true);
 		setCellSelectionEnabled(true);
 		setRowHeight(24);
-		getTableHeader().setDefaultRenderer(new MultiLineTableHeadRenderer());
-		getTableHeader().setForeground(Color.BLUE);
+		((DefaultTableCellRenderer) getTableHeader().getDefaultRenderer()).setFont(APP_FONT);
+		((DefaultTableCellRenderer) getTableHeader().getDefaultRenderer()).setForeground(Color.BLUE);
+		((DefaultTableCellRenderer) getTableHeader().getDefaultRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+//		getTableHeader().setDefaultRenderer(new MultiLineTableHeadRenderer());
 		setColumnControlVisible(true);
 		setFont(APP_FONT);
 		if(initHighLighter) {

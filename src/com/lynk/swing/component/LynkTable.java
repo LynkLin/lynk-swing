@@ -16,6 +16,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
@@ -26,7 +27,6 @@ import org.jdesktop.swingx.table.TableColumnExt;
 
 import com.lynk.swing.common.Constants;
 import com.lynk.swing.component.table.LynkColumnControlButton;
-import com.lynk.swing.component.table.MultiLineTableHeadRenderer;
 
 /**
  * 自定义
@@ -67,6 +67,10 @@ public class LynkTable extends JXTable implements Constants {
 		return uiPopMenu;
 	}
 
+	public LynkTable(TableModel dm) {
+		this(dm, true);
+	}
+	
 	public LynkTable(TableModel dm, boolean initHighLighter) {
 		super(dm);
 		this.initHighLighter = initHighLighter;
@@ -389,8 +393,10 @@ public class LynkTable extends JXTable implements Constants {
 		setColumnSelectionAllowed(true);
 		setCellSelectionEnabled(true);
 		setRowHeight(24);
-		getTableHeader().setDefaultRenderer(new MultiLineTableHeadRenderer());
-		getTableHeader().setForeground(Color.BLUE);
+		((DefaultTableCellRenderer) getTableHeader().getDefaultRenderer()).setFont(APP_FONT);
+		((DefaultTableCellRenderer) getTableHeader().getDefaultRenderer()).setForeground(Color.BLUE);
+		((DefaultTableCellRenderer) getTableHeader().getDefaultRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+//		getTableHeader().setDefaultRenderer(new MultiLineTableHeadRenderer());
 		setColumnControlVisible(true);
 		setFont(APP_FONT);
 		if(initHighLighter) {

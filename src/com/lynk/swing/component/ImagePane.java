@@ -21,10 +21,20 @@ public class ImagePane extends javax.swing.JPanel {
 		
 	}
 	
-	public ImagePane(String imageName) {
+	/**
+	 * 
+	 * @param imagePath, [injar: resource/image/xxx.png], [not injar: temp/xxx.png]
+	 * @param inJar
+	 */
+	public ImagePane(String imagePath, boolean inJar) {
 		InputStream is = null;
 		try {
-			is = this.getClass().getClassLoader().getResourceAsStream("resource/image/" + imageName);
+			if(inJar) {
+				is = this.getClass().getClassLoader().getResourceAsStream(imagePath);
+			} else {
+				is = new FileInputStream(System.getProperty("user.dir") + imagePath);
+			}
+			
 			image = ImageIO.read(is);
 			image.flush();
 			repaint();
@@ -41,6 +51,39 @@ public class ImagePane extends javax.swing.JPanel {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param imagePath , [injar: resource/image/xxx.png], [not injar: temp/xxx.png]
+	 * @param inJar
+	 */
+	public void setImage(String imagePath, boolean inJar) {
+		InputStream is = null;
+		try {
+			if(inJar) {
+				is = this.getClass().getClassLoader().getResourceAsStream(imagePath);
+			} else {
+				is = new FileInputStream(System.getProperty("user.dir") + imagePath);
+			}
+			image = ImageIO.read(is);
+			image.flush();
+			repaint();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (is != null) {
+					is.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @param imagePath 绝对路径
+	 */
 	public void setImage(String imagePath) {
 		InputStream is = null;
 		try {
