@@ -20,13 +20,13 @@ public abstract class LynkIntelliHints implements Constants{
 	private JComboBox<Object> comboBox;
 	private JTextField textField;
 
-	public LynkIntelliHints(JTextField textField) {
+	public LynkIntelliHints(JTextField textField, int comboBoxNum) {
 		this.textField = textField;
-		initUi();
+		initUi(comboBoxNum);
 		initListeners();
 	}
 	
-	private void initUi() {
+	private void initUi(int comboBoxNum) {
 		model = new DefaultComboBoxModel<>();
 		comboBox = new JComboBox<Object>(model) {
 			private static final long serialVersionUID = 1L;
@@ -36,6 +36,8 @@ public abstract class LynkIntelliHints implements Constants{
 				return new Dimension(super.getPreferredSize().width, 0);
 			}
 		};
+		comboBox.setFocusable(false);
+		comboBox.setMaximumRowCount(comboBoxNum > 0? comboBoxNum: 8);
 		comboBox.setFont(APP_FONT);
 		textField.setLayout(new BorderLayout());
 		textField.add(comboBox, BorderLayout.SOUTH);
@@ -75,7 +77,7 @@ public abstract class LynkIntelliHints implements Constants{
 		textField.addKeyListener(new KeyAdapter() {
 
 			@Override
-			public void keyTyped(KeyEvent evt) {
+			public void keyPressed(KeyEvent evt) {
 				setAdjusting(true);
 				if(evt.getKeyCode() == KeyEvent.VK_SPACE && comboBox.isPopupVisible()) {
 					evt.setKeyCode(KeyEvent.VK_ENTER);
@@ -86,7 +88,7 @@ public abstract class LynkIntelliHints implements Constants{
 					evt.setSource(comboBox);
 					comboBox.dispatchEvent(evt);
 					if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
-						textField.setText(comboBox.getSelectedItem().toString());
+						textField.setText(getComboText());
 						setPopupVisible(false);
 					}
 				}
@@ -98,8 +100,13 @@ public abstract class LynkIntelliHints implements Constants{
 		});
 	}
 	
-	public String getText() {
+	protected String getText() {
 		return textField.getText().trim();
+	}
+	
+	protected String getComboText() {
+		Object obj = comboBox.getSelectedItem();
+		return obj == null? "": obj.toString();
 	}
 	
 	protected abstract void updateList();
