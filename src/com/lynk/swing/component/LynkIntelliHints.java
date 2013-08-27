@@ -109,6 +109,7 @@ public abstract class LynkIntelliHints implements Constants{
 		return obj == null? "": obj.toString();
 	}
 	
+	
 	protected abstract void updateList();
 	
 	protected void setPopupVisible(boolean visible) {
