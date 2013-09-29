@@ -428,8 +428,8 @@ public class LynkFilterTable extends JXTable implements Constants {
 		setColumnSelectionAllowed(true);
 		setCellSelectionEnabled(true);
 		setRowHeight(24);
-		((DefaultTableCellRenderer) getTableHeader().getDefaultRenderer()).setFont(APP_FONT);
-		((DefaultTableCellRenderer) getTableHeader().getDefaultRenderer()).setForeground(Color.BLUE);
+		getTableHeader().setFont(APP_FONT);
+		getTableHeader().setForeground(Color.BLUE);
 		((DefaultTableCellRenderer) getTableHeader().getDefaultRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
 //		getTableHeader().setDefaultRenderer(new MultiLineTableHeadRenderer());
 		setColumnControlVisible(true);
