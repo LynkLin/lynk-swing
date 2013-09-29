@@ -58,7 +58,7 @@ import javax.swing.JComponent;
  * @author Romain Guy
  * @version 1.0
  */
-
+@Deprecated
 public class InfiniteProgressPanel extends JComponent implements MouseListener {
 	/**
 	 * 
