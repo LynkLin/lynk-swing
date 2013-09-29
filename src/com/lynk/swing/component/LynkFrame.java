@@ -13,23 +13,28 @@ import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
 import com.lynk.swing.common.Constants;
-import com.lynk.swing.component.common.InfiniteProgressPanel;
+import com.lynk.swing.component.common.WaitingPanel;
 
 public class LynkFrame extends JFrame implements Constants {
 	private static final long serialVersionUID = 1L;
 	
 	public static final Font WAIT_PANEL_FONT = new Font("微软雅黑", Font.PLAIN, 20);
 	
-	private InfiniteProgressPanel waitPanel;
+	private WaitingPanel waitPanel;
 	
 	public LynkFrame() {
-		waitPanel = new InfiniteProgressPanel();
-		waitPanel.setFont(WAIT_PANEL_FONT);
+		this(false);
+	}
+	
+	public LynkFrame(boolean enterKeyForward) {
+		waitPanel = new WaitingPanel();
 		setGlassPane(waitPanel);
-		Set<AWTKeyStroke> forwordDefaultKeys = getFocusTraversalKeys(FocusManager.FORWARD_TRAVERSAL_KEYS);
-		Set<AWTKeyStroke> forwordNewKeys = new HashSet<AWTKeyStroke>(forwordDefaultKeys);
-		forwordNewKeys.add(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0));
-		setFocusTraversalKeys(FocusManager.FORWARD_TRAVERSAL_KEYS, forwordNewKeys);
+		if(enterKeyForward) {
+			Set<AWTKeyStroke> forwordDefaultKeys = getFocusTraversalKeys(FocusManager.FORWARD_TRAVERSAL_KEYS);
+			Set<AWTKeyStroke> forwordNewKeys = new HashSet<AWTKeyStroke>(forwordDefaultKeys);
+			forwordNewKeys.add(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0));
+			setFocusTraversalKeys(FocusManager.FORWARD_TRAVERSAL_KEYS, forwordNewKeys);
+		}
 	}
 	
 	/**
