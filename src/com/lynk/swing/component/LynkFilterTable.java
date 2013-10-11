@@ -32,10 +32,9 @@ import org.jdesktop.swingx.decorator.HighlighterFactory;
 import org.jdesktop.swingx.table.TableColumnExt;
 
 import com.lynk.swing.common.Constants;
-import com.lynk.swing.component.table.FilterTableHeaderRenderer;
 import com.lynk.swing.component.table.LynkColumnControlButton;
-import com.lynk.swing.component.table.TableColumnFilterPopup;
-import com.lynk.swing.component.table.TableFilter;
+import com.lynk.swing.component.table.filter.FilterHeaderRenderer;
+import com.lynk.swing.component.table.filter.FilterPopup;
 
 /**
  * 自定义
@@ -72,7 +71,7 @@ public class LynkFilterTable extends JXTable implements Constants {
 	
 	private IModelOrSorterChanged modelOrSorterChanged;
 	
-	private TableColumnFilterPopup popup;
+	private FilterPopup filterPopup;
 	
 	private boolean initHighLighter = true;
 	
@@ -93,13 +92,8 @@ public class LynkFilterTable extends JXTable implements Constants {
 			
 			@Override
 			public void tableChanged(TableModelEvent e) {
-				if(popup.getFilter() != null) {
-//					RowSorter<?> sorter = LynkTable.this.getRowSorter();
-//					if(sorter instanceof DefaultRowSorter<?, ?>) {
-//						((DefaultRowSorter<?, ?>) sorter).setRowFilter(null);
-//					}
-					popup.getFilter().setFilter(LynkFilterTable.this);
-					popup.refreshUiFilterList();
+				if(filterPopup != null) {
+					filterPopup.getFilter().clear();
 				}
 			}
 		});
@@ -337,9 +331,8 @@ public class LynkFilterTable extends JXTable implements Constants {
 	}
 
 	private void init() {
-		TableFilter filter = new TableFilter(this);
-		popup = new TableColumnFilterPopup(true, filter);
-		FilterTableHeaderRenderer renderer = new FilterTableHeaderRenderer(filter);
+		filterPopup = new FilterPopup(true, this);
+		FilterHeaderRenderer renderer = new FilterHeaderRenderer(filterPopup.getFilter());
 		for(TableColumn column : Collections.list(getColumnModel().getColumns())) {
 			column.setHeaderRenderer(renderer);
 		}
@@ -431,7 +424,6 @@ public class LynkFilterTable extends JXTable implements Constants {
 		getTableHeader().setFont(APP_FONT);
 		getTableHeader().setForeground(Color.BLUE);
 		((DefaultTableCellRenderer) getTableHeader().getDefaultRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
-//		getTableHeader().setDefaultRenderer(new MultiLineTableHeadRenderer());
 		setColumnControlVisible(true);
 		setFont(APP_FONT);
 		if(initHighLighter) {

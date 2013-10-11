@@ -1,4 +1,4 @@
-package com.lynk.swing.component.table;
+package com.lynk.swing.component.table.filter;
 
 import java.awt.Color;
 import java.math.BigDecimal;

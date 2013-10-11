@@ -1,4 +1,4 @@
-package com.lynk.swing.component.table;
+package com.lynk.swing.component.table.filter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,10 +18,6 @@ public class TableFilter extends HashMap<Integer, List<FilterItem>>{
 	private JTable table;
 	private TableRowFilter filter = new TableRowFilter();
 	
-	public JTable getTable() {
-		return table;
-	}
-
 	/**
 	 * 是否正在载入数据中
 	 */
@@ -34,52 +30,49 @@ public class TableFilter extends HashMap<Integer, List<FilterItem>>{
 	public TableFilter(JTable table) {
 		super();
 		this.table = table;
-		setFilter(table);
 	}
 	
-	public void setFilter(JTable table) {
+	public void setFilter(int columnIndex) {
 		isSettingFilter = true;
-		clear();
 		TableModel model = table.getModel();
-		for(int columnIndex = 0; columnIndex < model.getColumnCount(); columnIndex++) {
-			List<FilterItem> items = new ArrayList<>();
-			for(int rowIndex = 0; rowIndex < model.getRowCount(); rowIndex++) {
-				FilterItem item = new FilterItem(model.getValueAt(rowIndex, columnIndex));
-				if(!items.contains(item)) {
-					items.add(item);
-				}
+		List<FilterItem> items = new ArrayList<>();
+		for(int rowIndex = 0; rowIndex < model.getRowCount(); rowIndex++) {
+			FilterItem item = new FilterItem(model.getValueAt(rowIndex, columnIndex));
+			if(!items.contains(item)) {
+				items.add(item);
 			}
-			Collections.sort(items);
-			put(columnIndex, items);
 		}
+		Collections.sort(items);
+		put(columnIndex, items);
 		isSettingFilter = false;
 	}
 	
-	/**
-	 * 重设筛选
-	 * @param cIndexNotIn
-	 */
-	public void resetFilter(int cIndexNotIn, DefaultRowSorter<?, ?> sorter) {
-		isSettingFilter = true;
-		List<FilterItem> oriItems = get(cIndexNotIn);
-		clear();
-		put(cIndexNotIn, oriItems);
-		TableModel model = table.getModel();
-		for(int columnIndex = 0; columnIndex < model.getColumnCount(); columnIndex++) {
-			if(columnIndex == cIndexNotIn) {
-				continue;
-			}
-			List<FilterItem> items = new ArrayList<>();
-			for(int i = 0; i < sorter.getViewRowCount(); i++) {
-				int mRowIndex = ((DefaultRowSorter<?, ?>) sorter).convertRowIndexToModel(i);
-				items.add(new FilterItem(model.getValueAt(mRowIndex, columnIndex)));
-				
-			}
-			Collections.sort(items);
-			put(columnIndex, items);
-		}
-		isSettingFilter = false;
-	}
+	
+//	/**
+//	 * 重设筛选
+//	 * @param cIndexNotIn
+//	 */
+//	public void resetFilter(int cIndexNotIn, DefaultRowSorter<?, ?> sorter) {
+//		isSettingFilter = true;
+//		List<FilterItem> oriItems = get(cIndexNotIn);
+//		clear();
+//		put(cIndexNotIn, oriItems);
+//		TableModel model = table.getModel();
+//		for(int columnIndex = 0; columnIndex < model.getColumnCount(); columnIndex++) {
+//			if(columnIndex == cIndexNotIn) {
+//				continue;
+//			}
+//			List<FilterItem> items = new ArrayList<>();
+//			for(int i = 0; i < sorter.getViewRowCount(); i++) {
+//				int mRowIndex = ((DefaultRowSorter<?, ?>) sorter).convertRowIndexToModel(i);
+//				items.add(new FilterItem(model.getValueAt(mRowIndex, columnIndex)));
+//				
+//			}
+//			Collections.sort(items);
+//			put(columnIndex, items);
+//		}
+//		isSettingFilter = false;
+//	}
 	
 	public boolean isSelected(int columnIndex, Object obj) {
 		return isSelected(get(columnIndex), obj);
@@ -87,7 +80,7 @@ public class TableFilter extends HashMap<Integer, List<FilterItem>>{
 	
 	public boolean isSelected(List<FilterItem> items, Object obj) {
 		if(items == null) {
-			return false;
+			return true;
 		}
 		int index = items.indexOf(new FilterItem(obj));
 		if(index < 0) {
@@ -109,7 +102,6 @@ public class TableFilter extends HashMap<Integer, List<FilterItem>>{
 				filter.setParentFilter(parentFilter);
 			}
 			((DefaultRowSorter<?, ?>) sorter).setRowFilter(filter);
-//			resetFilter(columnIndex, (DefaultRowSorter<?, ?>) sorter);
 			table.getTableHeader().repaint();
 			return true;
 		}

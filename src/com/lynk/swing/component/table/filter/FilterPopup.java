@@ -1,4 +1,4 @@
-package com.lynk.swing.component.table;
+package com.lynk.swing.component.table.filter;
 
 import java.awt.BorderLayout;
 import java.awt.ComponentOrientation;
@@ -18,6 +18,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
@@ -30,15 +31,17 @@ import com.jidesoft.swing.CheckBoxList;
 import com.lynk.swing.common.Constants;
 import com.lynk.swing.component.LynkPanel;
 import com.lynk.swing.component.LynkSearchTextField;
+import com.lynk.swing.component.table.filter.FilterItem;
 import com.lynk.swing.component.table.popup.ResizablePopupMenu;
 
-public class TableColumnFilterPopup extends ResizablePopupMenu implements Constants, MouseListener {
+public class FilterPopup extends ResizablePopupMenu implements Constants, MouseListener {
 	private static final long serialVersionUID = 1L;
 	
 	private int columnIndex = -1;
 
 	private Map<Integer, Dimension> popupSizes = new HashMap<Integer, Dimension>();
 	
+	private JTable table;
 	private TableFilter filter;
 	
 	private LynkSearchTextField uiSearchFiled = new LynkSearchTextField();
@@ -49,16 +52,20 @@ public class TableColumnFilterPopup extends ResizablePopupMenu implements Consta
 		return filter;
 	}
 
-	public TableColumnFilterPopup(boolean resizable, TableFilter filter) {
+	public FilterPopup(boolean resizable, JTable table) {
 		super(resizable);
-		this.filter = filter;
-		filter.getTable().getTableHeader().addMouseListener(this);
+		this.table = table;
+		this.filter = new TableFilter(table);
+		table.getTableHeader().addMouseListener(this);
 	}
 	
 	public void refreshUiFilterList() {
 		model.clear();
 		if(columnIndex == -1) {
 			return;
+		}
+		if(filter.get(columnIndex) == null) {
+			filter.setFilter(columnIndex);
 		}
 		for(FilterItem item: filter.get(columnIndex)) {
 			model.addElement(item);
@@ -240,14 +247,14 @@ public class TableColumnFilterPopup extends ResizablePopupMenu implements Consta
 	}
 	
 	private void showPopup(MouseEvent e) {
-		JTableHeader header = filter.getTable().getTableHeader();
-		TableColumnModel cModel = filter.getTable().getColumnModel();
+		JTableHeader header = table.getTableHeader();
+		TableColumnModel cModel = table.getColumnModel();
 		
 		int columnIndex = cModel.getColumnIndexAtX(e.getX());
 		if(columnIndex < 0) {
 			return;
 		}
-		columnIndex = filter.getTable().convertColumnIndexToModel(columnIndex);
+		columnIndex = table.convertColumnIndexToModel(columnIndex);
 		Dimension size = popupSizes.get(columnIndex);
 		if(size != null && size.height != 0 && size.width != 0) {
 			setPreferredSize(size);

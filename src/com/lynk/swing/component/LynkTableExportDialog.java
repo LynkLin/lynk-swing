@@ -101,7 +101,7 @@ public class LynkTableExportDialog extends LynkDialog implements Constants {
 				return false;
 			}
 		});
-		fileChooser.setSelectedFile(new File("HRM导出_" + Utils.getNowStr() + ".xlsx"));
+		fileChooser.setSelectedFile(new File("导出_" + Utils.getNowStr() + ".xlsx"));
 		
 		JPanel panel = new JPanel();
 		getContentPane().add(panel, BorderLayout.CENTER);
@@ -272,6 +272,9 @@ public class LynkTableExportDialog extends LynkDialog implements Constants {
 						if(value instanceof Color) {
 							cell.setCellType(XSSFCell.CELL_TYPE_STRING);
 							cell.setCellValue(((Color) value).getRGB());
+						} else if(value instanceof Number) {
+							cell.setCellType(XSSFCell.CELL_TYPE_NUMERIC);
+							cell.setCellValue(((Number) value).doubleValue());
 						} else {
 							cell.setCellType(XSSFCell.CELL_TYPE_STRING);
 							cell.setCellValue(value.toString());
