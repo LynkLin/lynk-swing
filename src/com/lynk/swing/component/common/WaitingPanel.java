@@ -6,18 +6,20 @@ import javax.swing.JProgressBar;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 import net.miginfocom.swing.MigLayout;
-
-import javax.swing.border.SoftBevelBorder;
-import javax.swing.border.BevelBorder;
 
 import org.apache.commons.lang.StringUtils;
 
 import com.jidesoft.swing.StyledLabel;
 import com.lynk.swing.common.Constants;
 
-public class WaitingPanel extends JPanel implements Constants {
+public class WaitingPanel extends JPanel implements MouseListener, MouseMotionListener, FocusListener, Constants {
 	private static final long serialVersionUID = 1L;
 
 	private StyledLabel uiInfo;
@@ -27,8 +29,8 @@ public class WaitingPanel extends JPanel implements Constants {
 	}
 	private void initComponents() {
 		setOpaque(false);
-		setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		setLayout(new MigLayout("", "[grow][grow][grow]", "[grow][][30][grow]"));
+		addMouseListener(this);
 		{
 			uiInfo = new StyledLabel("请稍候...");
 			uiInfo.setFont(APP_FONT.deriveFont(20f));
@@ -67,5 +69,32 @@ public class WaitingPanel extends JPanel implements Constants {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setColor(new Color(204, 204, 204, 200));
 		g2.fillRect(0, 0, getWidth(), getHeight());
+	}
+	@Override
+	public void mouseClicked(MouseEvent e) {
+	}
+	@Override
+	public void mousePressed(MouseEvent e) {
+	}
+	@Override
+	public void mouseReleased(MouseEvent e) {
+	}
+	@Override
+	public void mouseEntered(MouseEvent e) {
+	}
+	@Override
+	public void mouseExited(MouseEvent e) {
+	}
+	@Override
+	public void focusGained(FocusEvent e) {
+	}
+	@Override
+	public void focusLost(FocusEvent e) {
+	}
+	@Override
+	public void mouseDragged(MouseEvent e) {
+	}
+	@Override
+	public void mouseMoved(MouseEvent e) {
 	}
 }
