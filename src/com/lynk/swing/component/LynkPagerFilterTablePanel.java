@@ -27,6 +27,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import java.math.BigDecimal;
 import java.awt.Color;
+import java.awt.Font;
 
 public class LynkPagerFilterTablePanel<T extends TableModel> extends JPanel implements Constants {
 	private static final long serialVersionUID = 1L;
@@ -43,6 +44,8 @@ public class LynkPagerFilterTablePanel<T extends TableModel> extends JPanel impl
 	private JLabel uiCount;
 	private JLabel uiPageNowCount;
 	private JLabel uiPageNowCountFilter;
+	private JLabel uiDataNum;
+	private JLabel uiPageCount;
 	
 	public T getDataModel() {
 		return dataModel;
@@ -52,6 +55,9 @@ public class LynkPagerFilterTablePanel<T extends TableModel> extends JPanel impl
 		return uiTable;
 	}
 
+	/**
+	 * @wbp.parser.constructor
+	 */
 	public LynkPagerFilterTablePanel(T dm, boolean initHighLighter, PageChange pageChange) {
 		this(dm, initHighLighter, pageChange, 40);
 	}
@@ -68,86 +74,111 @@ public class LynkPagerFilterTablePanel<T extends TableModel> extends JPanel impl
 			JPanel panel = new JPanel();
 			panel.setBackground(SystemColor.controlHighlight);
 			add(panel, BorderLayout.SOUTH);
-			panel.setLayout(new MigLayout("", "[]5[]20[]5[]20[]5[]20[]5[][grow][]5[]20[]5[]20[]5[]", "[]"));
+			panel.setLayout(new MigLayout("", "[][]20[]5[]20[][][][]20[][]20[][][grow][][]20[][]20[][]", "[]"));
 			{
-				JLabel label = new JLabel("每页数据：");
-				label.setFont(APP_FONT_BLOD);
+				JLabel label = new JLabel("共:");
+				label.setFont(new Font("微软雅黑", Font.BOLD, 14));
 				panel.add(label, "cell 0 0");
 			}
 			{
-				uiPageMax = new JComboBox<Integer>();
-				uiPageMax.setFont(APP_FONT);
-				uiPageMax.setModel(new DefaultComboBoxModel<>(new Integer[]{1000, 5000, 10000, 30000, 50000, 100000}));
-				uiPageMax.setEditable(true);
-				uiPageMax.setSelectedItem(10000);
-				panel.add(uiPageMax, "cell 1 0");
+				uiDataNum = new JLabel("0");
+				uiDataNum.setForeground(Color.BLUE);
+				uiDataNum.setFont(new Font("微软雅黑", Font.PLAIN, 14));
+				panel.add(uiDataNum, "cell 1 0");
 			}
 			{
-				JLabel label = new JLabel("当前页：");
+				JLabel label = new JLabel("每页最多:");
 				label.setFont(APP_FONT_BLOD);
 				panel.add(label, "cell 2 0");
 			}
 			{
+				uiPageMax = new JComboBox<Integer>();
+				uiPageMax.setForeground(Color.BLUE);
+				uiPageMax.setFont(APP_FONT);
+				uiPageMax.setModel(new DefaultComboBoxModel<>(new Integer[]{1000, 5000, 10000, 30000, 50000, 100000}));
+				uiPageMax.setEditable(true);
+				uiPageMax.setSelectedItem(10000);
+				panel.add(uiPageMax, "cell 3 0");
+			}
+			{
+				JLabel label = new JLabel("页号:");
+				label.setFont(APP_FONT_BLOD);
+				panel.add(label, "cell 4 0");
+			}
+			{
 				uiPageNow = new JComboBox<Integer>(new DefaultComboBoxModel<>(new Integer[]{1}));
+				uiPageNow.setForeground(Color.BLUE);
 				uiPageNow.setEnabled(false);
 				uiPageNow.setMaximumRowCount(10);
 				uiPageNow.setFont(APP_FONT);
-				panel.add(uiPageNow, "cell 3 0");
+				uiPageNow.setFocusable(false);
+				panel.add(uiPageNow, "cell 5 0");
+			}
+			{
+				JLabel label = new JLabel("/");
+				label.setFont(new Font("微软雅黑", Font.BOLD, 14));
+				panel.add(label, "cell 6 0");
+			}
+			{
+				uiPageCount = new JLabel("1");
+				uiPageCount.setForeground(Color.BLUE);
+				uiPageCount.setFont(new Font("微软雅黑", Font.PLAIN, 14));
+				panel.add(uiPageCount, "cell 7 0");
 			}
 			{
 				JLabel label = new JLabel("本页数据：");
 				label.setFont(APP_FONT_BLOD);
-				panel.add(label, "cell 4 0");
+				panel.add(label, "cell 8 0");
 			}
 			{
 				uiPageNowCount = new JLabel("0");
 				uiPageNowCount.setForeground(Color.BLUE);
 				uiPageNowCount.setFont(APP_FONT);
-				panel.add(uiPageNowCount, "cell 5 0");
+				panel.add(uiPageNowCount, "cell 9 0");
 			}
 			{
 				JLabel label = new JLabel("筛选后：");
 				label.setFont(APP_FONT_BLOD);
-				panel.add(label, "cell 6 0");
+				panel.add(label, "cell 10 0");
 			}
 			{
 				uiPageNowCountFilter = new JLabel("0");
 				uiPageNowCountFilter.setForeground(Color.BLUE);
 				uiPageNowCountFilter.setFont(APP_FONT);
-				panel.add(uiPageNowCountFilter, "cell 7 0");
+				panel.add(uiPageNowCountFilter, "cell 11 0");
 			}
 			{
 				JLabel label = new JLabel("计数:");
 				label.setFont(APP_FONT_BLOD);
-				panel.add(label, "cell 9 0");
+				panel.add(label, "cell 13 0");
 			}
 			{
 				uiCount = new JLabel("0");
 				uiCount.setForeground(Color.BLUE);
 				uiCount.setFont(APP_FONT);
-				panel.add(uiCount, "cell 10 0");
+				panel.add(uiCount, "cell 14 0");
 			}
 			{
 				JLabel label = new JLabel("和:");
 				label.setFont(APP_FONT_BLOD);
-				panel.add(label, "cell 11 0");
+				panel.add(label, "cell 15 0");
 			}
 			{
 				uiSum = new JLabel("0");
 				uiSum.setForeground(Color.BLUE);
 				uiSum.setFont(APP_FONT);
-				panel.add(uiSum, "cell 12 0");
+				panel.add(uiSum, "cell 16 0");
 			}
 			{
 				JLabel label = new JLabel("均值:");
 				label.setFont(APP_FONT_BLOD);
-				panel.add(label, "cell 13 0");
+				panel.add(label, "cell 17 0");
 			}
 			{
 				uiAverage = new JLabel("0");
 				uiAverage.setForeground(Color.BLUE);
 				uiAverage.setFont(APP_FONT);
-				panel.add(uiAverage, "cell 14 0");
+				panel.add(uiAverage, "cell 18 0");
 			}
 			
 		}
@@ -270,6 +301,7 @@ public class LynkPagerFilterTablePanel<T extends TableModel> extends JPanel impl
 	 */
 	public void setDataNum(int dataNum) {
 		this.dataNum = dataNum;
+		uiDataNum.setText(Integer.toString(dataNum));
 		uiPageMax.addItem(dataNum);
 		uiPageNow.setEnabled(true);
 		setDataNum();
@@ -284,6 +316,8 @@ public class LynkPagerFilterTablePanel<T extends TableModel> extends JPanel impl
 		if(dataNum % pageMax != 0) {
 			pageNum++;
 		}
+		uiPageCount.setText(Integer.toString(pageNum));
+		
 		for(int i = 0; i < pageNum; i++) {
 			uiPageNow.addItem(i+ 1);
 		}
