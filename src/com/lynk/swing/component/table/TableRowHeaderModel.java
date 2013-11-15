@@ -27,6 +27,11 @@ class TableRowHeaderModel extends AbstractTableModel {
 		return 1;
 	}
 
+	@Override
+	public String getColumnName(int column) {
+		return "全选";
+	}
+
 	public Object getValueAt(int row, int column) {
 		return row + 1;
 	}

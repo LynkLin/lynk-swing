@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.lynk.swing.component.LynkFilterTable;
 import com.lynk.swing.component.LynkTableExportDialog;
+import com.lynk.swing.component.table.TableRowHead;
 
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
@@ -72,9 +73,10 @@ public class TestTable extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		contentPane.add(scrollPane, BorderLayout.CENTER);
 		
-		DefaultTableModel model = new DefaultTableModel(new String[][]{}, new String[]{"姓名", "年龄", "性别", "出生日期", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别", "性别"});
+		DefaultTableModel model = new DefaultTableModel(new String[][]{{"姓名", "年龄", "性别", "出生日期"}, {"姓名", "年龄", "性别", "出生日期"}}, new String[]{"姓名", "年龄", "性别", "出生日期"});
 		lynkTable = new LynkFilterTable(model, true);
 		scrollPane.setViewportView(lynkTable);
+		scrollPane.setRowHeaderView(new TableRowHead(lynkTable));
 	}
 
 	protected void buttonActionPerformed(ActionEvent e) {

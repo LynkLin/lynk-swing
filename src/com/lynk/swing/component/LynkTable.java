@@ -2,8 +2,11 @@ package com.lynk.swing.component;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -12,8 +15,10 @@ import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -40,18 +45,23 @@ public class LynkTable extends JXTable implements Constants {
 	private static final long serialVersionUID = 1L;
 
 	private static final String DEFAULT_SELECT_ALL_TEXT = "全选";
+	private static final String DEFAULT_COPY_TEXT = "复制";
+	private static final String DEFAULT_COPY_HEAD_TEXT = "复制(含标题)";
 	private static final String DEFAULT_ADD_TEXT = "新增";
 	private static final String DEFAULT_DELETE_TEXT = "删除";
 	private static final String DEFAULT_RESTORE_TEXT = "还原删除";
 	
+	private static KeyStroke COPY = KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK, false);
+	
 	private JPopupMenu uiPopMenu;
 	
-	private String selectAllText = DEFAULT_SELECT_ALL_TEXT;
 	private String addText = DEFAULT_ADD_TEXT;
 	private String deleteText = DEFAULT_DELETE_TEXT;
 	private String restoreText = DEFAULT_RESTORE_TEXT;
 	
 	private JMenuItem uiSelectAll;
+	private JMenuItem uiCpoy;
+	private JMenuItem uiCpoyWithHead;
 	private JMenuItem uiAdd;
 	private JMenuItem uiDelete;
 	private JMenuItem uiRestore;
@@ -77,14 +87,6 @@ public class LynkTable extends JXTable implements Constants {
 		init();
 	}
 	
-	/**
-	 * 全选文本
-	 * @param selectAllText
-	 */
-	public void setSelectAllText(String selectAllText) {
-		this.selectAllText = selectAllText;
-	}
-
 	/**
 	 * 新增文本
 	 * @param addText
@@ -129,14 +131,16 @@ public class LynkTable extends JXTable implements Constants {
 	 * @param sizeStr, 逗号隔开
 	 */
 	public void setColumnSize(String sizeStr) {
-		String[] sizeStrs = sizeStr.split(",");
-		TableColumnModel cm = getColumnModel();
-		for (int i = 0; i < (cm.getColumnCount() < sizeStrs.length ? cm
-				.getColumnCount() : sizeStrs.length); i++) {
-			if(Integer.parseInt(sizeStrs[i].trim()) < 0) {
-				cm.getColumn(i).setResizable(false);
+		if(sizeStr != null && sizeStr.length() > 0) {
+			String[] sizeStrs = sizeStr.split(",");
+			TableColumnModel cm = getColumnModel();
+			for (int i = 0; i < (cm.getColumnCount() < sizeStrs.length ? cm
+					.getColumnCount() : sizeStrs.length); i++) {
+				if(Integer.parseInt(sizeStrs[i].trim()) < 0) {
+					cm.getColumn(i).setResizable(false);
+				}
+				cm.getColumn(i).setPreferredWidth(Math.abs(Integer.parseInt(sizeStrs[i].trim())));
 			}
-			cm.getColumn(i).setPreferredWidth(Math.abs(Integer.parseInt(sizeStrs[i].trim())));
 		}
 	}
 	
@@ -145,15 +149,17 @@ public class LynkTable extends JXTable implements Constants {
 	 * @param visibleColumnNameStr, 逗号隔开
 	 */
 	public void setColumnVisible(String visibleColumnNameStr) {
-		List<String> visibleColumnNames = new ArrayList<>(Arrays.asList(visibleColumnNameStr.split(",")));
-		int columnCount = getColumnCount(true);
-		for(int i = columnCount - 1; i >= 0 ; i--) {
-			TableColumnExt columnExt =  getColumnExt(i);
-			String columnName = columnExt.getTitle();
-			if(visibleColumnNames.contains(columnName)) {
-				columnExt.setVisible(true);
-			} else {
-				columnExt.setVisible(false);
+		if(visibleColumnNameStr != null && visibleColumnNameStr.length() > 0) {
+			List<String> visibleColumnNames = new ArrayList<>(Arrays.asList(visibleColumnNameStr.split(",")));
+			int columnCount = getColumnCount(true);
+			for(int i = columnCount - 1; i >= 0 ; i--) {
+				TableColumnExt columnExt =  getColumnExt(i);
+				String columnName = columnExt.getTitle();
+				if(visibleColumnNames.contains(columnName)) {
+					columnExt.setVisible(true);
+				} else {
+					columnExt.setVisible(false);
+				}
 			}
 		}
 	}
@@ -310,8 +316,8 @@ public class LynkTable extends JXTable implements Constants {
 
 	private void init() {
 		uiPopMenu = new JPopupMenu();
-		
-		uiSelectAll = new JMenuItem(selectAllText, new ImageIcon(this.getClass().getResource("/resources/images/select-all.png")));
+		//全选
+		uiSelectAll = new JMenuItem(DEFAULT_SELECT_ALL_TEXT, new ImageIcon(this.getClass().getResource("/resources/images/select-all.png")));
 		uiSelectAll.setFont(APP_FONT);
 		uiSelectAll.addActionListener(new ActionListener() {
 			
@@ -328,6 +334,53 @@ public class LynkTable extends JXTable implements Constants {
 			}
 		});
 		uiPopMenu.add(uiSelectAll);
+		
+		JMenu menu = new JMenu("复制");
+		menu.setIcon(new ImageIcon(this.getClass().getResource("/resources/images/copy.png")));
+		menu.setFont(APP_FONT);
+		uiPopMenu.add(menu);
+		{
+			//复制
+			uiCpoy = new JMenuItem(DEFAULT_COPY_TEXT, new ImageIcon(this.getClass().getResource("/resources/images/copy.png")));
+			uiCpoy.setFont(APP_FONT);
+			uiCpoy.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent evt) {
+					if(getSelectedRowCount() == 0 || getSelectedColumnCount() == 0) {
+						return;
+					}
+					copyToClipboard();
+				}
+			});
+			menu.add(uiCpoy);
+			
+			//复制(含标题)
+			uiCpoyWithHead = new JMenuItem(DEFAULT_COPY_HEAD_TEXT, new ImageIcon(this.getClass().getResource("/resources/images/copy.png")));
+			uiCpoyWithHead.setFont(APP_FONT);
+			uiCpoyWithHead.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent evt) {
+					if(getSelectedRowCount() == 0 || getSelectedColumnCount() == 0) {
+						return;
+					}
+					copyToClipboardWithHead();
+				}
+			});
+			menu.add(uiCpoyWithHead);
+		}
+		
+		
+		registerKeyboardAction(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(e.getActionCommand().equals("Copy")) {
+					copyToClipboard();
+				}
+			}
+		}, "Copy", COPY, JComponent.WHEN_FOCUSED);
 		
 		addMouseListener(new MouseAdapter() {
 
@@ -369,14 +422,17 @@ public class LynkTable extends JXTable implements Constants {
 							bSelectAll = true;
 						} 
 					}
+					if(uiSelectAll != null) {
+						uiSelectAll.setEnabled(bSelectAll);
+					}
+					if(uiCpoy != null) {
+						uiCpoy.setEnabled(bSelectAll);
+					}
 					if(uiAdd != null) {
 						uiAdd.setEnabled(bAdd);
 					}
 					if(uiDelete != null) {
 						uiDelete.setEnabled(bDelete);
-					}
-					if(uiSelectAll != null) {
-						uiSelectAll.setEnabled(bSelectAll);
 					}
 					uiPopMenu.show(LynkTable.this, evt.getX(), evt.getY());
 				}
@@ -385,10 +441,62 @@ public class LynkTable extends JXTable implements Constants {
 		setTableProperties();
 	}
 	
+	
+	/**
+	 * 复制内容到剪贴板
+	 */
+	private void copyToClipboard() {
+		StringBuffer sb = new StringBuffer();
+		int[] rows = getSelectedRows();
+		int[] columns = getSelectedColumns();
+		//复制内容
+		for (int i = 0; i < rows.length; i++) {
+			for (int j = 0; j < columns.length; j++) {
+				sb.append(getValueAt(rows[i], columns[j]));
+				if (j < columns.length - 1){
+					sb.append("\t");
+				}
+			}
+			sb.append("\n");
+		}
+		StringSelection selection = new StringSelection(sb.toString());
+		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, selection);
+	}
+	
+	/**
+	 * 复制内容到剪贴板(含标题)
+	 */
+	private void copyToClipboardWithHead() {
+		StringBuffer sb = new StringBuffer();
+		int[] rows = getSelectedRows();
+		int[] columns = getSelectedColumns();
+		//复制标题
+		for(int i = 0; i < columns.length; i++) {
+			String columnName = getColumnName(columns[i]);
+			sb.append(columnName);
+			if (i < columns.length - 1){
+				sb.append("\t");
+			}
+		}
+		sb.append("\n");
+		//复制内容
+		for (int i = 0; i < rows.length; i++) {
+			for (int j = 0; j < columns.length; j++) {
+				sb.append(getValueAt(rows[i], columns[j]));
+				if (j < columns.length - 1){
+					sb.append("\t");
+				}
+			}
+			sb.append("\n");
+		}
+		StringSelection selection = new StringSelection(sb.toString());
+		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, selection);
+	}
+	
 	/**
 	 * 设置table样式
 	 */
-	private void setTableProperties() {
+	protected void setTableProperties() {
 		setAutoResizeMode(AUTO_RESIZE_OFF);
 		setColumnSelectionAllowed(true);
 		setCellSelectionEnabled(true);
@@ -396,7 +504,6 @@ public class LynkTable extends JXTable implements Constants {
 		getTableHeader().setFont(APP_FONT);
 		getTableHeader().setForeground(Color.BLUE);
 		((DefaultTableCellRenderer) getTableHeader().getDefaultRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
-//		getTableHeader().setDefaultRenderer(new MultiLineTableHeadRenderer());
 		setColumnControlVisible(true);
 		setFont(APP_FONT);
 		if(initHighLighter) {

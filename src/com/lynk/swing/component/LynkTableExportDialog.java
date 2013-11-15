@@ -47,6 +47,7 @@ import javax.swing.JList;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import net.miginfocom.swing.MigLayout;
 
 public class LynkTableExportDialog extends LynkDialog implements Constants {
 	private static final long serialVersionUID = 1L;
@@ -106,104 +107,113 @@ public class LynkTableExportDialog extends LynkDialog implements Constants {
 		JPanel panel = new JPanel();
 		getContentPane().add(panel, BorderLayout.CENTER);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 43, 254, 533);
-		scrollPane.setBorder(new TitledBorder(null, "\u4E0D\u7528\u5BFC\u51FA\u7684\u5217", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		
-		JButton uiSave = new JButton("保存");
-		uiSave.setFocusable(false);
-		uiSave.setBounds(10, 10, 81, 27);
-		uiSave.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				uiSaveActionPerformed(e);
-			}
-		});
-		uiSave.setIcon(new ImageIcon(LynkTableExportDialog.class.getResource("/resources/images/save.png")));
-		uiSave.setFont(APP_FONT);
-		
-		JButton uiSelectAll = new JButton("全选");
-		uiSelectAll.setFocusable(false);
-		uiSelectAll.setBounds(101, 10, 81, 27);
-		uiSelectAll.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				uiSelectAllActionPerformed(e);
-			}
-		});
-		uiSelectAll.setIcon(new ImageIcon(LynkTableExportDialog.class.getResource("/resources/images/enable.png")));
-		uiSelectAll.setFont(APP_FONT);
-		
-		uiAutoWidth = new JCheckBox("自动调整Excel列宽");
-		uiAutoWidth.setFocusable(false);
-		uiAutoWidth.setBounds(200, 10, 143, 27);
-		uiAutoWidth.setFont(APP_FONT);
-		uiAutoWidth.setToolTipText("数据量大时会导致导出缓慢!");
-		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBorder(new TitledBorder(null, "\u5BFC\u51FA\u7684\u5217", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		scrollPane_1.setBounds(312, 43, 254, 533);
-		
 		uiLeftColumnModel = new DefaultListModel<>();
 		TableModel model = table.getModel();
 		for(int i = 0; i < model.getColumnCount(); i ++) {
 			ExportedColumn column = new ExportedColumn(model.getColumnName(i), i);
 			uiLeftColumnModel.addElement(column);
 		}
-		uiLeftColumn = new JList<ExportedColumn>(uiLeftColumnModel);
-		uiLeftColumn.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				uiColumnNameMouseClicked(e);
-			}
-		});
-		uiLeftColumn.setToolTipText("双击添加");
-		uiLeftColumn.setFont(APP_FONT);
-		scrollPane.setViewportView(uiLeftColumn);
-		panel.setLayout(null);
-		panel.add(scrollPane_1);
+		panel.setLayout(new MigLayout("", "[grow]", "[][grow]"));
 		
-		uiRightColumnModel = new DefaultListModel<>();
-		uiRightColumn = new JList<ExportedColumn>(uiRightColumnModel);
-		uiRightColumn.setFont(APP_FONT);
-		uiRightColumn.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				uiExportedColumnMouseClicked(e);
+		{
+			JPanel panelTop = new JPanel();
+			panel.add(panelTop, "cell 0 0,grow");
+			panelTop.setLayout(new MigLayout("", "[][][][]", "[]"));
+			
+			{
+				JButton uiSave = new JButton("保存");
+				panelTop.add(uiSave, "cell 0 0");
+				uiSave.setFocusable(false);
+				uiSave.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						uiSaveActionPerformed(e);
+					}
+				});
+				uiSave.setIcon(new ImageIcon(LynkTableExportDialog.class.getResource("/resources/images/save.png")));
+				uiSave.setFont(APP_FONT);
+				
+				JButton uiSelectAll = new JButton("全选");
+				panelTop.add(uiSelectAll, "cell 1 0");
+				uiSelectAll.setFocusable(false);
+				uiSelectAll.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						uiSelectAllActionPerformed(e);
+					}
+				});
+				uiSelectAll.setIcon(new ImageIcon(LynkTableExportDialog.class.getResource("/resources/images/enable.png")));
+				uiSelectAll.setFont(APP_FONT);
+				
+				uiAutoWidth = new JCheckBox("自动调整Excel列宽");
+				panelTop.add(uiAutoWidth, "cell 2 0");
+				uiAutoWidth.setFocusable(false);
+				uiAutoWidth.setFont(APP_FONT);
+				uiAutoWidth.setToolTipText("数据量大时会导致导出缓慢!");
 			}
-		});
-		uiRightColumn.setToolTipText("双击删除");
-		scrollPane_1.setViewportView(uiRightColumn);
-		panel.add(scrollPane);
-		panel.add(uiSave);
-		panel.add(uiSelectAll);
-		panel.add(uiAutoWidth);
-		
-		JButton uiToRight = new JButton(">>");
-		uiToRight.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				uiToRightActionPerformed(e);
+		}
+		{
+			JPanel panelBottom = new JPanel();
+			panel.add(panelBottom, "cell 0 1,grow");
+			panelBottom.setLayout(new MigLayout("", "[300][][300]", "[grow][]100[][grow]"));
+			{
+				JScrollPane scrollPane = new JScrollPane();
+				panelBottom.add(scrollPane, "cell 0 0 1 4,grow");
+				scrollPane.setBorder(new TitledBorder(null, "\u4E0D\u7528\u5BFC\u51FA\u7684\u5217", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+				uiLeftColumn = new JList<ExportedColumn>(uiLeftColumnModel);
+				uiLeftColumn.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						uiColumnNameMouseClicked(e);
+					}
+				});
+				uiLeftColumn.setToolTipText("双击添加");
+				uiLeftColumn.setFont(APP_FONT);
+				scrollPane.setViewportView(uiLeftColumn);
 			}
-		});
-		uiToRight.setFocusable(false);
-		uiToRight.setForeground(Color.BLUE);
-		uiToRight.setToolTipText("");
-		uiToRight.setFont(APP_FONT);
-		uiToRight.setMargin(new Insets(0, 0, 0, 0));
-		uiToRight.setBounds(274, 170, 28, 28);
-		panel.add(uiToRight);
-		
-		JButton uiToLeft = new JButton("<<");
-		uiToLeft.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				uiToLeftActionPerformed(e);
+			{
+				JButton uiToRight = new JButton(new ImageIcon(LynkTableExportDialog.class.getResource("/resources/images/right_arrow.png")));
+				panelBottom.add(uiToRight, "cell 1 1");
+				uiToRight.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						uiToRightActionPerformed(e);
+					}
+				});
+				uiToRight.setFocusable(false);
+				uiToRight.setForeground(Color.BLUE);
+				uiToRight.setToolTipText("添加");
+				uiToRight.setFont(APP_FONT);
+				uiToRight.setMargin(new Insets(0, 0, 0, 0));
 			}
-		});
-		uiToLeft.setFocusable(false);
-		uiToLeft.setForeground(Color.BLUE);
-		uiToLeft.setToolTipText("");
-		uiToLeft.setFont(APP_FONT);
-		uiToLeft.setMargin(new Insets(0, 0, 0, 0));
-		uiToLeft.setBounds(274, 245, 28, 28);
-		panel.add(uiToLeft);
+			{
+				JScrollPane scrollPane = new JScrollPane();
+				panelBottom.add(scrollPane, "cell 2 0 1 4,grow");
+				scrollPane.setBorder(new TitledBorder(null, "\u5BFC\u51FA\u7684\u5217", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+				uiRightColumnModel = new DefaultListModel<>();
+				uiRightColumn = new JList<ExportedColumn>(uiRightColumnModel);
+				uiRightColumn.setFont(APP_FONT);
+				uiRightColumn.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						uiExportedColumnMouseClicked(e);
+					}
+				});
+				uiRightColumn.setToolTipText("双击删除");
+				scrollPane.setViewportView(uiRightColumn);
+			}
+			{
+				JButton uiToLeft = new JButton(new ImageIcon(LynkTableExportDialog.class.getResource("/resources/images/left_arrow.png")));
+				panelBottom.add(uiToLeft, "cell 1 2");
+				uiToLeft.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						uiToLeftActionPerformed(e);
+					}
+				});
+				uiToLeft.setFocusable(false);
+				uiToLeft.setForeground(Color.BLUE);
+				uiToLeft.setToolTipText("删除");
+				uiToLeft.setFont(APP_FONT);
+				uiToLeft.setMargin(new Insets(0, 0, 0, 0));
+			}
+		}
 	}
 	
 	protected void uiSaveActionPerformed(ActionEvent evt) {

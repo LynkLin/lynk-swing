@@ -29,9 +29,7 @@ public class TableRowHead extends JTable {
 		super(new TableRowHeaderModel(refTable.getRowCount()));
 		setRowHeight(refTable.getRowHeight());
 		setSelectionMode(refTable.getSelectionModel().getSelectionMode());
-		
 		setFocusable(false);
-		
 		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);// 不可以调整列宽
 		getColumnModel().getColumn(0).setPreferredWidth(columnWidth);
 		setDefaultRenderer(Object.class, new RowHeaderRenderer(refTable, this));// 设置渲染器
@@ -59,7 +57,7 @@ public class TableRowHead extends JTable {
 	 * 一起变化。当选择某行时，该行颜色会发生变化
 	 */
 	class RowHeaderRenderer extends JLabel implements TableCellRenderer {
-		private static final long serialVersionUID = 2096154305323045184L;
+		private static final long serialVersionUID = 1L;
 		
 		JTable dataTable;// 需要添加rowHeader的JTable
 		JTable headTable;// 用于显示rowHeader的JTable

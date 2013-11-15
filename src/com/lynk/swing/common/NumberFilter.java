@@ -12,7 +12,7 @@ public class NumberFilter extends DocumentFilter {
 		StringBuilder builder = new StringBuilder(string);
 		for (int i = builder.length() - 1; i >= 0; i--) {
 			int cp = builder.codePointAt(i);
-			if (!Character.isDigit(cp) && cp != '.') {
+			if (!Character.isDigit(cp) && cp != '.' && cp != '-') {
 				builder.deleteCharAt(i);
 				if (Character.isSupplementaryCodePoint(cp)) {
 					i--;
@@ -30,7 +30,7 @@ public class NumberFilter extends DocumentFilter {
             StringBuilder builder = new StringBuilder(text);
             for (int i = builder.length() - 1; i >= 0; i--) {
                 int cp = builder.codePointAt(i);
-                if (!Character.isDigit(cp) && cp != '.') {
+                if (!Character.isDigit(cp) && cp != '.' && cp != '-') {
                     builder.deleteCharAt(i);
                     if (Character.isSupplementaryCodePoint(cp)) {
                         i--;
