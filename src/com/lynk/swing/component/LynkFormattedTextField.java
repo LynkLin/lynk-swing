@@ -4,6 +4,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 
 import javax.swing.JFormattedTextField;
@@ -66,6 +67,20 @@ public class LynkFormattedTextField extends JFormattedTextField implements Const
 	 * 值改变
 	 * @param valueChangedListener
 	 */
+	public void addValueChangedListener(final ValueChangedListenerWithValue valueChangedListener) {
+		addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {
+				if(evt.getPropertyName().equals("value")) {
+					valueChangedListener.valueChanged(new BigDecimal(evt.getOldValue().toString()), new BigDecimal(evt.getNewValue().toString()));
+				}
+			}
+		});
+	}
+	
+	/**
+	 * 值改变
+	 * @param valueChangedListener
+	 */
 	public void addValueChangedListener(final ValueChangedListener valueChangedListener) {
 		addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
@@ -97,5 +112,9 @@ public class LynkFormattedTextField extends JFormattedTextField implements Const
 	
 	public interface ValueChangedListener {
 		void valueChanged();
+	}
+	
+	public interface ValueChangedListenerWithValue {
+		void valueChanged(BigDecimal oldValue, BigDecimal newValue);
 	}
 }
