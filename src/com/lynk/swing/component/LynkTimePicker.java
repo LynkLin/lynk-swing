@@ -22,7 +22,7 @@ public class LynkTimePicker extends JSpinner {
 		setEditor(editor);
 	}
 
-	public String getTimer() {
+	public String getTime() {
 		if(super.getValue() instanceof Date) {
 			return df.format((Date) super.getValue());
 		}
