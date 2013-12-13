@@ -2,11 +2,16 @@ package com.lynk.swing.test;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
 import com.lynk.swing.component.LynkTimePicker;
+
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
 
@@ -32,6 +37,14 @@ public class TestTimerPicker extends JFrame {
 	 */
 	public TestTimerPicker() {
 		initComponents();
+		String time = "12:14";
+		DateFormat df = new SimpleDateFormat("HH:mm");
+		try {
+			System.out.println(df.parse(time));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	private void initComponents() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
