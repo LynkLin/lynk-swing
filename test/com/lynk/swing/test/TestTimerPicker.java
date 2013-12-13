@@ -54,7 +54,7 @@ public class TestTimerPicker extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		{
-			LynkTimePicker lynkTimePicker = new LynkTimePicker();
+			LynkTimePicker lynkTimePicker = new LynkTimePicker("12:18");
 			contentPane.add(lynkTimePicker, BorderLayout.NORTH);
 		}
 		{
