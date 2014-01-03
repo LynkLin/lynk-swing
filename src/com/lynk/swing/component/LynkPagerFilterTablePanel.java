@@ -6,6 +6,7 @@ import java.awt.BorderLayout;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultRowSorter;
+import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
 import javax.swing.RowSorter;
@@ -28,6 +29,8 @@ import java.awt.event.ItemEvent;
 import java.math.BigDecimal;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class LynkPagerFilterTablePanel<T extends TableModel> extends JPanel implements Constants {
 	private static final long serialVersionUID = 1L;
@@ -78,22 +81,34 @@ public class LynkPagerFilterTablePanel<T extends TableModel> extends JPanel impl
 			JPanel panel = new JPanel();
 			panel.setBackground(SystemColor.controlHighlight);
 			add(panel, BorderLayout.SOUTH);
-			panel.setLayout(new MigLayout("", "[][]20[]5[]20[][][][]20[][]20[][][grow][][]20[][]20[][]", "[]"));
+			panel.setLayout(new MigLayout("", "[]10[][]20[]5[]20[][][][]20[][]20[][][grow][][]20[][]20[][]", "[]"));
+			{
+				JButton uiClearFilter = new JButton("清除筛选");
+				uiClearFilter.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						uiClearFilterActionPerformed(e);
+					}
+				});
+				uiClearFilter.setFont(APP_FONT);
+				uiClearFilter.setFocusable(false);
+				uiClearFilter.setForeground(Color.BLUE);
+				panel.add(uiClearFilter, "cell 0 0");
+			}
 			{
 				JLabel label = new JLabel("共:");
 				label.setFont(new Font("微软雅黑", Font.BOLD, 14));
-				panel.add(label, "cell 0 0");
+				panel.add(label, "cell 1 0");
 			}
 			{
 				uiDataNum = new JLabel("0");
 				uiDataNum.setForeground(Color.BLUE);
 				uiDataNum.setFont(new Font("微软雅黑", Font.PLAIN, 14));
-				panel.add(uiDataNum, "cell 1 0");
+				panel.add(uiDataNum, "cell 2 0");
 			}
 			{
 				JLabel label = new JLabel("每页最多:");
 				label.setFont(APP_FONT_BLOD);
-				panel.add(label, "cell 2 0");
+				panel.add(label, "cell 3 0");
 			}
 			{
 				uiPageMax = new JComboBox<Integer>();
@@ -102,12 +117,12 @@ public class LynkPagerFilterTablePanel<T extends TableModel> extends JPanel impl
 				uiPageMax.setModel(new DefaultComboBoxModel<>(new Integer[]{1000, 5000, 10000, 30000, 50000, 100000}));
 				uiPageMax.setEditable(true);
 				uiPageMax.setSelectedItem(10000);
-				panel.add(uiPageMax, "cell 3 0");
+				panel.add(uiPageMax, "cell 4 0");
 			}
 			{
 				JLabel label = new JLabel("页号:");
 				label.setFont(APP_FONT_BLOD);
-				panel.add(label, "cell 4 0");
+				panel.add(label, "cell 5 0");
 			}
 			{
 				uiPageNow = new JComboBox<Integer>(new DefaultComboBoxModel<>(new Integer[]{1}));
@@ -116,73 +131,73 @@ public class LynkPagerFilterTablePanel<T extends TableModel> extends JPanel impl
 				uiPageNow.setMaximumRowCount(10);
 				uiPageNow.setFont(APP_FONT);
 				uiPageNow.setFocusable(false);
-				panel.add(uiPageNow, "cell 5 0");
+				panel.add(uiPageNow, "cell 6 0");
 			}
 			{
 				JLabel label = new JLabel("/");
 				label.setFont(new Font("微软雅黑", Font.BOLD, 14));
-				panel.add(label, "cell 6 0");
+				panel.add(label, "cell 7 0");
 			}
 			{
 				uiPageCount = new JLabel("1");
 				uiPageCount.setForeground(Color.BLUE);
 				uiPageCount.setFont(new Font("微软雅黑", Font.PLAIN, 14));
-				panel.add(uiPageCount, "cell 7 0");
+				panel.add(uiPageCount, "cell 8 0");
 			}
 			{
 				JLabel label = new JLabel("本页数据：");
 				label.setFont(APP_FONT_BLOD);
-				panel.add(label, "cell 8 0");
+				panel.add(label, "cell 9 0");
 			}
 			{
 				uiPageNowCount = new JLabel("0");
 				uiPageNowCount.setForeground(Color.BLUE);
 				uiPageNowCount.setFont(APP_FONT);
-				panel.add(uiPageNowCount, "cell 9 0");
+				panel.add(uiPageNowCount, "cell 10 0");
 			}
 			{
 				JLabel label = new JLabel("筛选后：");
 				label.setFont(APP_FONT_BLOD);
-				panel.add(label, "cell 10 0");
+				panel.add(label, "cell 11 0");
 			}
 			{
 				uiPageNowCountFilter = new JLabel("0");
 				uiPageNowCountFilter.setForeground(Color.BLUE);
 				uiPageNowCountFilter.setFont(APP_FONT);
-				panel.add(uiPageNowCountFilter, "cell 11 0");
+				panel.add(uiPageNowCountFilter, "cell 12 0");
 			}
 			{
 				JLabel label = new JLabel("计数:");
 				label.setFont(APP_FONT_BLOD);
-				panel.add(label, "cell 13 0");
+				panel.add(label, "cell 14 0");
 			}
 			{
 				uiCount = new JLabel("0");
 				uiCount.setForeground(Color.BLUE);
 				uiCount.setFont(APP_FONT);
-				panel.add(uiCount, "cell 14 0");
+				panel.add(uiCount, "cell 15 0");
 			}
 			{
 				JLabel label = new JLabel("和:");
 				label.setFont(APP_FONT_BLOD);
-				panel.add(label, "cell 15 0");
+				panel.add(label, "cell 16 0");
 			}
 			{
 				uiSum = new JLabel("0");
 				uiSum.setForeground(Color.BLUE);
 				uiSum.setFont(APP_FONT);
-				panel.add(uiSum, "cell 16 0");
+				panel.add(uiSum, "cell 17 0");
 			}
 			{
 				JLabel label = new JLabel("均值:");
 				label.setFont(APP_FONT_BLOD);
-				panel.add(label, "cell 17 0");
+				panel.add(label, "cell 18 0");
 			}
 			{
 				uiAverage = new JLabel("0");
 				uiAverage.setForeground(Color.BLUE);
 				uiAverage.setFont(APP_FONT);
-				panel.add(uiAverage, "cell 18 0");
+				panel.add(uiAverage, "cell 19 0");
 			}
 			
 		}
@@ -379,5 +394,8 @@ public class LynkPagerFilterTablePanel<T extends TableModel> extends JPanel impl
 		void pageMaxChange(int pageMax);
 		
 		void pageNowChange(int startIndex, int pageMax);
+	}
+	protected void uiClearFilterActionPerformed(ActionEvent evt) {
+		uiTable.clearFilter();
 	}
 }

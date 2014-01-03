@@ -27,7 +27,6 @@ public class LynkFilterTable extends LynkTable {
 	
 	private FilterPopup filterPopup;
 	
-	
 	public LynkFilterTable(TableModel dm) {
 		this(dm, true);
 	}
@@ -52,6 +51,12 @@ public class LynkFilterTable extends LynkTable {
 		for(TableColumn column : Collections.list(getColumnModel().getColumns())) {
 			column.setHeaderRenderer(renderer);
 		}
+	}
+	
+	public void clearFilter() {
+		filterPopup.reset();
+		setRowFilter(null);
+		getTableHeader().repaint();
 	}
 	
 	public void addModelOrSorterChanged(IModelOrSorterChanged evt) {

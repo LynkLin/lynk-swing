@@ -20,6 +20,16 @@ public abstract class LynkIntelliHints implements Constants{
 	private JComboBox<Object> comboBox;
 	private JTextField textField;
 
+	public static final void install(JTextField textField, final DoUpdate doUpdate) {
+		new LynkIntelliHints(textField, -1) {
+			
+			@Override
+			protected void updateList() {
+				doUpdate.updateList();
+			}
+		};
+	}
+	
 	public LynkIntelliHints(JTextField textField, int comboBoxNum) {
 		this.textField = textField;
 		initUi(comboBoxNum);
@@ -117,10 +127,18 @@ public abstract class LynkIntelliHints implements Constants{
 	}
 	
 	protected boolean isAdjusting() {
-		return (boolean) comboBox.getClientProperty("is_adjusting");
+		if(comboBox.getClientProperty("is_adjusting") == null) {
+			return false;
+		} else {
+			return (boolean) comboBox.getClientProperty("is_adjusting");
+		}
 	}
 	
 	protected void setAdjusting(boolean adjusting) {
 		comboBox.putClientProperty("is_adjusting", adjusting);
+	}
+	
+	public interface DoUpdate {
+		void updateList();
 	}
 }

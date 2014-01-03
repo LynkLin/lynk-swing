@@ -70,6 +70,11 @@ public class FilterPopup extends ResizablePopupMenu implements Constants, MouseL
 		initUi();
 	}
 	
+	public void reset() {
+		columnIndex = -1;
+		filter.clear();
+	}
+	
 	private void initUi() {
 		rootPanel = new JPanel();
 		card = new CardLayout();
@@ -91,45 +96,83 @@ public class FilterPopup extends ResizablePopupMenu implements Constants, MouseL
 			listPanel.setBorder( BorderFactory.createEmptyBorder(4, 4, 4, 4));
 			rootPanel.add(listPanel, "list");
 			{
-				uiSearchFiled.setToolTipText("搜索框");
-				uiSearchFiled.getDocument().addDocumentListener(new DocumentListener() {
-					
-					@Override
-					public void removeUpdate(DocumentEvent evt) {
-						search();
-					}
-					
-					@Override
-					public void insertUpdate(DocumentEvent evt) {
-						search();
-					}
-					
-					@Override
-					public void changedUpdate(DocumentEvent evt) {
-						search();
-					}
-					
-					private void search() {
-						List<FilterItem> items = filter.get(columnIndex);
-						for(int i = 0; i< items.size(); i++) {
-							FilterItem item = items.get(i);
-							String value;
-							if(item.getObj() instanceof Number) {
-								value = new BigDecimal(((Number) item.getObj()).doubleValue()).toString();
-							} else {
-								value = item.getObj().toString();
-							}
-							if(value.toLowerCase().startsWith(uiSearchFiled.getText().toLowerCase())) {
-								uiFilterList.setSelectedIndex(i);
-								uiFilterList.ensureIndexIsVisible(i);
-								uiFilterList.repaint();
-								return;
-							}
+				JPanel panel = new JPanel();
+				panel.setLayout(new BorderLayout());
+				listPanel.add(panel, BorderLayout.NORTH);
+				{
+					uiSearchFiled.setToolTipText("搜索框");
+					uiSearchFiled.getDocument().addDocumentListener(new DocumentListener() {
+						
+						@Override
+						public void removeUpdate(DocumentEvent evt) {
+							search();
 						}
 						
+						@Override
+						public void insertUpdate(DocumentEvent evt) {
+							search();
+						}
+						
+						@Override
+						public void changedUpdate(DocumentEvent evt) {
+							search();
+						}
+						
+						private void search() {
+							List<FilterItem> items = filter.get(columnIndex);
+							for(int i = 0; i< items.size(); i++) {
+								FilterItem item = items.get(i);
+								String value;
+								if(item.getObj() instanceof Number) {
+									value = new BigDecimal(((Number) item.getObj()).doubleValue()).toString();
+								} else {
+									value = item.getObj().toString();
+								}
+								if(value.toLowerCase().startsWith(uiSearchFiled.getText().toLowerCase())) {
+									uiFilterList.setSelectedIndex(i);
+									uiFilterList.ensureIndexIsVisible(i);
+									uiFilterList.repaint();
+									return;
+								}
+							}
+							
+						}
+					});
+					panel.add(uiSearchFiled, BorderLayout.NORTH);
+				}
+				{
+					JPanel buttonPanel = new JPanel();
+					buttonPanel.setLayout(new MigLayout("insets 0", "[grow]30[grow]", "3[]"));
+					{
+						JButton uiSelectAll = new JButton("全选", new ImageIcon(getClass().getResource("/resources/images/select-all.png")));
+						uiSelectAll.setFocusable(false);
+						uiSelectAll.setMargin(new Insets(0, 0, 0, 0));
+						uiSelectAll.addActionListener(new ActionListener() {
+							
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								selectAll();
+							}
+						});
+						uiSelectAll.setFont(APP_FONT);
+						buttonPanel.add(uiSelectAll, "cell 0 0,grow");
 					}
-				});
-				listPanel.add(uiSearchFiled, BorderLayout.NORTH);
+					{
+						JButton uiSelectNone = new JButton("全消", new ImageIcon(getClass().getResource("/resources/images/select-all.png")));
+						uiSelectNone.setFocusable(false);
+						uiSelectNone.setMargin(new Insets(0, 0, 0, 0));
+						uiSelectNone.addActionListener(new ActionListener() {
+							
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								selectNone();
+							}
+						});
+						uiSelectNone.setFont(APP_FONT);
+						buttonPanel.add(uiSelectNone, "cell 1 0,grow");
+					}
+					panel.add(buttonPanel, BorderLayout.SOUTH);
+				}
 			}
 			{
 				JScrollPane scrollPane = new JScrollPane();
@@ -170,20 +213,20 @@ public class FilterPopup extends ResizablePopupMenu implements Constants, MouseL
 				uiApply.setFont(APP_FONT);
 				toolBar.add(uiApply);
 				
-				toolBar.addSeparator();
+//				toolBar.addSeparator();
 				
-				JButton uiSelectAll = new JButton("全选", new ImageIcon(getClass().getResource("/resources/images/select-all.png")));
-				uiSelectAll.setFocusable(false);
-				uiSelectAll.setMargin(new Insets(0, 0, 0, 0));
-				uiSelectAll.addActionListener(new ActionListener() {
-					
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						selectAll();
-					}
-				});
-				uiSelectAll.setFont(APP_FONT);
-				toolBar.add(uiSelectAll);
+//				JButton uiSelectAll = new JButton("全选", new ImageIcon(getClass().getResource("/resources/images/select-all.png")));
+//				uiSelectAll.setFocusable(false);
+//				uiSelectAll.setMargin(new Insets(0, 0, 0, 0));
+//				uiSelectAll.addActionListener(new ActionListener() {
+//					
+//					@Override
+//					public void actionPerformed(ActionEvent e) {
+//						selectAll();
+//					}
+//				});
+//				uiSelectAll.setFont(APP_FONT);
+//				toolBar.add(uiSelectAll);
 				
 				listPanel.add(toolBar, BorderLayout.SOUTH);
 			}
@@ -197,61 +240,25 @@ public class FilterPopup extends ResizablePopupMenu implements Constants, MouseL
 		card.show(rootPanel, "wait");
 		loadThread = new LoadFilterThread();
 		loadThread.execute();
-//		new SwingWorker<List<FilterItem>, FilterItem>() {
-//
-//			@Override
-//			protected List<FilterItem> doInBackground() throws Exception {
-//				model.clear();
-//				if(columnIndex == -1) {
-//					return null;
-//				}
-//				if(filter.get(columnIndex) == null) {
-//					filter.setFilter(columnIndex);
-//				}
-//				for(FilterItem item: filter.get(columnIndex)) {
-//					publish(item);
-//				}
-//				return null;
-//			}
-//
-//			@Override
-//			protected void process(List<FilterItem> items) {
-//				for(FilterItem item: items) {
-//					model.addElement(item);
-//				}
-//			}
-//
-//			@Override
-//			protected void done() {
-//				try {
-//					get();
-//					uiFilterList.setModel(model);
-//					uiFilterList.clearCheckBoxListSelection();
-//					for (int i = 0; i < filter.get(columnIndex).size(); i++) {
-//						FilterItem item = filter.get(columnIndex).get(i);
-//						if(item.isSelected()) {
-//							uiFilterList.addCheckBoxListSelectedIndex(i);
-//						}
-//					}
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//				card.show(rootPanel, "list");
-//			}
-//			
-//		}.execute();
 	}
 	
 	/**
 	 * 全选和全消
 	 */
 	private void selectAll() {
-		if(uiFilterList.getCheckBoxListSelectedIndices().length == uiFilterList.getModel().getSize()) {
-			uiFilterList.clearCheckBoxListSelection();
-		} else {
-			uiFilterList.selectAll();
-		}
-		
+//		if(uiFilterList.getCheckBoxListSelectedIndices().length == uiFilterList.getModel().getSize()) {
+//			uiFilterList.clearCheckBoxListSelection();
+//		} else {
+//			
+//		}
+		uiFilterList.selectAll();
+	}
+	
+	/**
+	 * 全选和全消
+	 */
+	private void selectNone() {
+		uiFilterList.clearCheckBoxListSelection();
 	}
 
 	/**
@@ -291,7 +298,10 @@ public class FilterPopup extends ResizablePopupMenu implements Constants, MouseL
 			if(columnIndex == -1) {
 				return null;
 			}
-			if(filter.get(columnIndex) == null) {
+//			if(filter.get(columnIndex) == null) {
+//				filter.setFilter(columnIndex);
+//			}
+			if(!filter.isFilted(columnIndex)) {
 				filter.setFilter(columnIndex);
 			}
 			for(FilterItem item: filter.get(columnIndex)) {

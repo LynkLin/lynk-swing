@@ -50,6 +50,7 @@ public class TestTable extends JFrame {
 	public TestTable() {
 		initComponents();
 	}
+
 	private void initComponents() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 582, 484);
@@ -57,11 +58,11 @@ public class TestTable extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
-		
+
 		JToolBar toolBar = new JToolBar();
 		toolBar.setFloatable(false);
 		contentPane.add(toolBar, BorderLayout.NORTH);
-		
+
 		JButton button = new JButton("导出");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -69,11 +70,20 @@ public class TestTable extends JFrame {
 			}
 		});
 		toolBar.add(button);
-		
+
 		JScrollPane scrollPane = new JScrollPane();
 		contentPane.add(scrollPane, BorderLayout.CENTER);
-		
-		DefaultTableModel model = new DefaultTableModel(new String[][]{{"姓名", "年龄", "性别", "出生日期"}, {"姓名", "年龄", "性别", "出生日期"}}, new String[]{"姓名", "年龄", "性别", "出生日期"});
+
+		DefaultTableModel model = new DefaultTableModel(new String[][] {
+				{ "姓名1", "年龄1", "男", "出生日期" }
+				, { "姓名2", "年龄2", "男", "出生日期" }
+				, { "姓名3", "年龄3", "男", "出生日期" }
+				, { "姓名4", "年龄4", "男", "出生日期" }
+				, { "姓名5", "年龄5", "女", "出生日期" }
+				, { "姓名6", "年龄6", "女", "出生日期" }
+				, { "姓名7", "年龄7", "女", "出生日期" }
+				, { "姓名8", "年龄8", "女", "出生日期" }},
+				new String[] { "姓名", "年龄", "性别", "出生日期" });
 		lynkTable = new LynkFilterTable(model, true);
 		scrollPane.setViewportView(lynkTable);
 		scrollPane.setRowHeaderView(new TableRowHead(lynkTable));

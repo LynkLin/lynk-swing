@@ -36,8 +36,14 @@ public class TableFilter extends HashMap<Integer, List<FilterItem>>{
 		isSettingFilter = true;
 		TableModel model = table.getModel();
 		List<FilterItem> items = new ArrayList<>();
-		for(int rowIndex = 0; rowIndex < model.getRowCount(); rowIndex++) {
-			FilterItem item = new FilterItem(model.getValueAt(rowIndex, columnIndex));
+//		for(int rowIndex = 0; rowIndex < model.getRowCount(); rowIndex++) {
+//			FilterItem item = new FilterItem(model.getValueAt(rowIndex, columnIndex));
+//			if(!items.contains(item)) {
+//				items.add(item);
+//			}
+//		}
+		for(int rowIndex = 0; rowIndex < table.getRowCount(); rowIndex++) {
+			FilterItem item = new FilterItem(model.getValueAt(table.convertRowIndexToModel(rowIndex), columnIndex));
 			if(!items.contains(item)) {
 				items.add(item);
 			}
@@ -134,10 +140,15 @@ public class TableFilter extends HashMap<Integer, List<FilterItem>>{
 				return false;
 			}
 			for(int i = 0; i < entry.getValueCount(); i ++) {
+				if(!isFilted(i)) {
+					continue;
+				}
 				List<FilterItem> items = get(i);
 				if(!isSelected(items, entry.getValue(i))) {
+//					System.out.println("false: " + entry.getValue(i));
 					return false;
 				}
+//				System.out.println("true: " + entry.getValue(i));
 			}
 			return true;
 		}
