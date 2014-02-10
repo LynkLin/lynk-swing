@@ -71,7 +71,7 @@ public class LynkPagerFilterTablePanel<T extends TableModel> extends JPanel impl
 		addlistener(pageChange);
 	}
 	
-	protected LynkFilterTable initTable(T dm) {
+	protected LynkFilterTable initTable() {
 		return new LynkFilterTable(dataModel);
 	}
 	
@@ -205,7 +205,7 @@ public class LynkPagerFilterTablePanel<T extends TableModel> extends JPanel impl
 			JScrollPane scrollPane = new JScrollPane();
 			add(scrollPane, BorderLayout.CENTER);
 			{
-				uiTable = initTable(dataModel);
+				uiTable = initTable();
 				scrollPane.setViewportView(uiTable);
 				scrollPane.setRowHeaderView(new TableRowHead(uiTable, rowHeadwidth));
 			}
