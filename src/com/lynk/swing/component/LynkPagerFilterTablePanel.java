@@ -49,6 +49,7 @@ public class LynkPagerFilterTablePanel<T extends TableModel> extends JPanel impl
 	private JLabel uiPageNowCountFilter;
 	private JLabel uiDataNum;
 	private JLabel uiPageCount;
+	private TableRowHead rowHeadTable;
 	
 	public T getDataModel() {
 		return dataModel;
@@ -56,6 +57,10 @@ public class LynkPagerFilterTablePanel<T extends TableModel> extends JPanel impl
 	
 	public LynkFilterTable getTable() {
 		return uiTable;
+	}
+
+	public TableRowHead getRowHeadTable() {
+		return rowHeadTable;
 	}
 
 	/**
