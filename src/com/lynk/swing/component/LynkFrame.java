@@ -89,4 +89,12 @@ public class LynkFrame extends JFrame implements Constants {
 	public void showInfoMsg(String msg) {
 		JOptionPane.showMessageDialog(this, msg, APP_NAME, JOptionPane.INFORMATION_MESSAGE);
 	}
+	
+	public int showYesNoComfirmMsg(String msg) {
+		return JOptionPane.showConfirmDialog(this, msg, APP_NAME, JOptionPane.YES_NO_OPTION);
+	}
+	
+	public int showOkCancelComfirmMsg(String msg) {
+		return JOptionPane.showConfirmDialog(this, msg, APP_NAME, JOptionPane.OK_CANCEL_OPTION);
+	}
 }

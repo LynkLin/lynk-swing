@@ -14,12 +14,19 @@ public class LynkSummaryTable extends JXTable {
 	private final String COMBO_AVG = "平均值";
 	private final String COMBO_COUNT = "计数";
 	
+	@SuppressWarnings("unused")
 	private JTable dataTable;
-	
+
 	public LynkSummaryTable(JTable dataTable) {
 		super(new LynkSummaryRowModel(dataTable));
 		this.dataTable = dataTable;
+		initUi();
 		initCellRenderer();
+	}
+	
+	private void initUi() {
+		setAutoResizeMode(AUTO_RESIZE_OFF);
+		
 	}
 	
 	private void initCellRenderer() {

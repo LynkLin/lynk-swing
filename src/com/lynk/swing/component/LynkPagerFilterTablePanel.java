@@ -75,6 +75,10 @@ public class LynkPagerFilterTablePanel<T extends TableModel> extends JPanel impl
 		return new LynkFilterTable(dataModel);
 	}
 	
+	protected TableRowHead initTableRowHead(LynkFilterTable uiTable, int rowHeadwidth) {
+		return new TableRowHead(uiTable, rowHeadwidth);
+	}
+	
 	private void initComponents(boolean initHighLighter, int rowHeadwidth) {
 		setLayout(new BorderLayout(0, 0));
 		{
@@ -207,7 +211,7 @@ public class LynkPagerFilterTablePanel<T extends TableModel> extends JPanel impl
 			{
 				uiTable = initTable();
 				scrollPane.setViewportView(uiTable);
-				scrollPane.setRowHeaderView(new TableRowHead(uiTable, rowHeadwidth));
+				scrollPane.setRowHeaderView(initTableRowHead(uiTable, rowHeadwidth));
 			}
 		}
 	}
