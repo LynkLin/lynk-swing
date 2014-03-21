@@ -1,6 +1,5 @@
 package com.lynk.swing.test;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -17,12 +16,15 @@ import javax.swing.text.DateFormatter;
 
 import net.miginfocom.swing.MigLayout;
 
-import javax.swing.JTextField;
 import javax.swing.JFormattedTextField;
 import javax.swing.JButton;
 
 public class TestFormatText extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 
 	/**
