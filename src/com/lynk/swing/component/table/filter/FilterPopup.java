@@ -212,22 +212,6 @@ public class FilterPopup extends ResizablePopupMenu implements Constants, MouseL
 				});
 				uiApply.setFont(APP_FONT);
 				toolBar.add(uiApply);
-				
-//				toolBar.addSeparator();
-				
-//				JButton uiSelectAll = new JButton("全选", new ImageIcon(getClass().getResource("/resources/images/select-all.png")));
-//				uiSelectAll.setFocusable(false);
-//				uiSelectAll.setMargin(new Insets(0, 0, 0, 0));
-//				uiSelectAll.addActionListener(new ActionListener() {
-//					
-//					@Override
-//					public void actionPerformed(ActionEvent e) {
-//						selectAll();
-//					}
-//				});
-//				uiSelectAll.setFont(APP_FONT);
-//				toolBar.add(uiSelectAll);
-				
 				listPanel.add(toolBar, BorderLayout.SOUTH);
 			}
 		}

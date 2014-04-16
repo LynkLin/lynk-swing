@@ -39,7 +39,7 @@ public class LynkFilterTable extends LynkTable {
 			@Override
 			public void tableChanged(TableModelEvent e) {
 				if(filterPopup != null) {
-					filterPopup.getFilter().clear();
+					clearFilter();
 				}
 			}
 		});
@@ -82,6 +82,12 @@ public class LynkFilterTable extends LynkTable {
 		});
 	}
 	
+	@Override
+	public void setModel(TableModel dataModel) {
+		super.setModel(dataModel);
+		
+	}
+
 	public interface IModelOrSorterChanged {
 		void modelOrSorterChanged();
 	}
