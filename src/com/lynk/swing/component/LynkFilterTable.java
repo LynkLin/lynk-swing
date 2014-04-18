@@ -38,8 +38,10 @@ public class LynkFilterTable extends LynkTable {
 			
 			@Override
 			public void tableChanged(TableModelEvent e) {
-				if(filterPopup != null) {
-					clearFilter();
+				if(e.getType() == TableModelEvent.UPDATE && e.getLastRow() > e.getFirstRow()) {
+					if(filterPopup != null) {
+						clearFilter();
+					}
 				}
 			}
 		});

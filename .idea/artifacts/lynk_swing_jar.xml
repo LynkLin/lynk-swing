@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="lynk-swing:jar">
+    <output-path>$PROJECT_DIR$/dist</output-path>
+    <root id="archive" name="lynk-swing.jar">
+      <element id="module-output" name="lynk-swing" />
+    </root>
+  </artifact>
+</component>

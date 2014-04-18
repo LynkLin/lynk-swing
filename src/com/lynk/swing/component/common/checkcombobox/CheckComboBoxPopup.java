@@ -54,13 +54,13 @@ public class CheckComboBoxPopup<E> extends ResizablePopupMenu implements Constan
 	}
 	
 	public void initComponents(List<E> values) {
-		JPanel rootPanel = new JPanel();
+		JPanel rootPanel = new JPanel(new BorderLayout());
 		add(rootPanel);
 		{
 			LynkPanel listPanel = new LynkPanel();
 			listPanel.setLayout(new BorderLayout(0, 5));
 			listPanel.setBorder( BorderFactory.createEmptyBorder(4, 4, 4, 4));
-			rootPanel.add(listPanel, "list");
+			rootPanel.add(listPanel, BorderLayout.CENTER);
 			{
 				JPanel panel = new JPanel();
 				panel.setLayout(new BorderLayout());
