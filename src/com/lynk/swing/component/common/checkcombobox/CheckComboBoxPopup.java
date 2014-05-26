@@ -216,7 +216,12 @@ public class CheckComboBoxPopup<E> extends ResizablePopupMenu implements Constan
 			CheckStore<E> store = model.get(i);
 			store.setSelected(indexs.contains(i));
 		}
-		textFieldShowed.setText(value.substring(0, value.length()- seperate.length()));
+		if(value.length() > 0) {
+			textFieldShowed.setText(value.substring(0, value.length()- seperate.length()));
+		} else {
+			textFieldShowed.setText("");
+		}
+		
 		setVisible(false);
 	}
 	

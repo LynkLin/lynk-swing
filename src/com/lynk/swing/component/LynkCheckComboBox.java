@@ -54,6 +54,10 @@ public class LynkCheckComboBox<E> extends JPanel implements Constants {
 		}
 	}
 	
+	public void setEditable(boolean b) {
+		textField.setEditable(b);
+	}
+	
 	public List<E> getValues() {
 		return popup.getValues();
 	}
