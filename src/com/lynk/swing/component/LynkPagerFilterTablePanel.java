@@ -42,9 +42,9 @@ public class LynkPagerFilterTablePanel<T extends TableModel> extends JPanel impl
 	private LynkFilterTable uiTable;
 	private JComboBox<Integer> uiPageMax;
 	private JComboBox<Integer> uiPageNow;
-	private JLabel uiSum;
-	private JLabel uiAverage;
-	private JLabel uiCount;
+	private LynkTextField uiSum;
+	private LynkTextField uiAverage;
+	private LynkTextField uiCount;
 	private JLabel uiPageNowCount;
 	private JLabel uiPageNowCountFilter;
 	private JLabel uiDataNum;
@@ -181,7 +181,8 @@ public class LynkPagerFilterTablePanel<T extends TableModel> extends JPanel impl
 				panel.add(label, "cell 14 0");
 			}
 			{
-				uiCount = new JLabel("0");
+				uiCount = new LynkTextField("0");
+				uiCount.setEditable(false);
 				uiCount.setForeground(Color.BLUE);
 				uiCount.setFont(APP_FONT);
 				panel.add(uiCount, "cell 15 0");
@@ -192,7 +193,8 @@ public class LynkPagerFilterTablePanel<T extends TableModel> extends JPanel impl
 				panel.add(label, "cell 16 0");
 			}
 			{
-				uiSum = new JLabel("0");
+				uiSum = new LynkTextField("0");
+				uiSum.setEditable(false);
 				uiSum.setForeground(Color.BLUE);
 				uiSum.setFont(APP_FONT);
 				panel.add(uiSum, "cell 17 0");
@@ -203,7 +205,8 @@ public class LynkPagerFilterTablePanel<T extends TableModel> extends JPanel impl
 				panel.add(label, "cell 18 0");
 			}
 			{
-				uiAverage = new JLabel("0");
+				uiAverage = new LynkTextField("0");
+				uiAverage.setEditable(false);
 				uiAverage.setForeground(Color.BLUE);
 				uiAverage.setFont(APP_FONT);
 				panel.add(uiAverage, "cell 19 0");

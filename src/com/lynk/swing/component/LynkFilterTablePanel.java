@@ -34,9 +34,9 @@ public class LynkFilterTablePanel<T extends TableModel> extends JPanel implement
 	
 	private T dataModel;
 	private LynkFilterTable uiTable;
-	private JLabel uiSum;
-	private JLabel uiAverage;
-	private JLabel uiCount;
+	private LynkTextField uiSum;
+	private LynkTextField uiAverage;
+	private LynkTextField uiCount;
 	private JLabel uiPageNowCountFilter;
 	private JLabel uiDataNum;
 	private TableRowHead rowHeadTable;
@@ -121,7 +121,8 @@ public class LynkFilterTablePanel<T extends TableModel> extends JPanel implement
 				panel.add(label, "cell 6 0");
 			}
 			{
-				uiCount = new JLabel("0");
+				uiCount = new LynkTextField("0");
+				uiCount.setEditable(false);
 				uiCount.setForeground(Color.BLUE);
 				uiCount.setFont(APP_FONT);
 				panel.add(uiCount, "cell 7 0");
@@ -132,7 +133,8 @@ public class LynkFilterTablePanel<T extends TableModel> extends JPanel implement
 				panel.add(label, "cell 8 0");
 			}
 			{
-				uiSum = new JLabel("0");
+				uiSum = new LynkTextField("0");
+				uiSum.setEditable(false);
 				uiSum.setForeground(Color.BLUE);
 				uiSum.setFont(APP_FONT);
 				panel.add(uiSum, "cell 9 0");
@@ -143,7 +145,8 @@ public class LynkFilterTablePanel<T extends TableModel> extends JPanel implement
 				panel.add(label, "cell 10 0");
 			}
 			{
-				uiAverage = new JLabel("0");
+				uiAverage = new LynkTextField("0");
+				uiAverage.setEditable(false);
 				uiAverage.setForeground(Color.BLUE);
 				uiAverage.setFont(APP_FONT);
 				panel.add(uiAverage, "cell 11 0");
