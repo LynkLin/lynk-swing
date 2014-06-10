@@ -170,6 +170,7 @@ public class LynkFilterTablePanel<T extends TableModel> extends JPanel implement
 			@Override
 			public void modelOrSorterChanged() {
 				int modelCount = dataModel.getRowCount();
+				uiDataNum.setText(Integer.toString(modelCount));
 				
 				int sortRowCount = -1;
 				RowSorter<?> sorter = uiTable.getRowSorter();
