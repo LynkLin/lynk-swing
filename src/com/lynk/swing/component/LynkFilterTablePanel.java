@@ -26,6 +26,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.SwingConstants;
 
 public class LynkFilterTablePanel<T extends TableModel> extends JPanel implements Constants {
 	private static final long serialVersionUID = 1L;
@@ -80,7 +81,7 @@ public class LynkFilterTablePanel<T extends TableModel> extends JPanel implement
 			JPanel panel = new JPanel();
 			panel.setBackground(SystemColor.controlHighlight);
 			add(panel, BorderLayout.SOUTH);
-			panel.setLayout(new MigLayout("", "[]10[][]20[][][grow][][]20[][]20[][]", "[]"));
+			panel.setLayout(new MigLayout("", "[]10[][]20[][][200px:n][][100px:n,grow]20[][100px:n,grow]20[][100px:n,grow]", "[]"));
 			{
 				JButton uiClearFilter = new JButton("清除筛选");
 				uiClearFilter.addActionListener(new ActionListener() {
@@ -122,10 +123,11 @@ public class LynkFilterTablePanel<T extends TableModel> extends JPanel implement
 			}
 			{
 				uiCount = new LynkTextField("0");
+				uiCount.setHorizontalAlignment(SwingConstants.LEFT);
 				uiCount.setEditable(false);
 				uiCount.setForeground(Color.BLUE);
 				uiCount.setFont(APP_FONT);
-				panel.add(uiCount, "cell 7 0");
+				panel.add(uiCount, "cell 7 0,growx");
 			}
 			{
 				JLabel label = new JLabel("和:");
@@ -134,10 +136,11 @@ public class LynkFilterTablePanel<T extends TableModel> extends JPanel implement
 			}
 			{
 				uiSum = new LynkTextField("0");
+				uiSum.setHorizontalAlignment(SwingConstants.LEFT);
 				uiSum.setEditable(false);
 				uiSum.setForeground(Color.BLUE);
 				uiSum.setFont(APP_FONT);
-				panel.add(uiSum, "cell 9 0");
+				panel.add(uiSum, "cell 9 0,growx");
 			}
 			{
 				JLabel label = new JLabel("均值:");
@@ -146,10 +149,11 @@ public class LynkFilterTablePanel<T extends TableModel> extends JPanel implement
 			}
 			{
 				uiAverage = new LynkTextField("0");
+				uiAverage.setHorizontalAlignment(SwingConstants.LEFT);
 				uiAverage.setEditable(false);
 				uiAverage.setForeground(Color.BLUE);
 				uiAverage.setFont(APP_FONT);
-				panel.add(uiAverage, "cell 11 0");
+				panel.add(uiAverage, "cell 11 0,growx");
 			}
 			
 		}
