@@ -20,12 +20,12 @@ import com.lynk.swing.component.table.TableRowHead;
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.SystemColor;
-
 import java.math.BigDecimal;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import javax.swing.SwingConstants;
 
 public class LynkFilterTablePanel<T extends TableModel> extends JPanel implements Constants {
@@ -41,6 +41,7 @@ public class LynkFilterTablePanel<T extends TableModel> extends JPanel implement
 	private JLabel uiPageNowCountFilter;
 	private JLabel uiDataNum;
 	private TableRowHead rowHeadTable;
+	private JPanel uiSumPane;
 	
 	public T getDataModel() {
 		return dataModel;
@@ -81,7 +82,7 @@ public class LynkFilterTablePanel<T extends TableModel> extends JPanel implement
 			JPanel panel = new JPanel();
 			panel.setBackground(SystemColor.controlHighlight);
 			add(panel, BorderLayout.SOUTH);
-			panel.setLayout(new MigLayout("", "[]10[][]20[][][200px:n][][100px:n,grow]20[][100px:n,grow]20[][100px:n,grow]", "[]"));
+			panel.setLayout(new MigLayout("", "[]10[][]20[][][200px:n,grow]", "[]"));
 			{
 				JButton uiClearFilter = new JButton("清除筛选");
 				uiClearFilter.addActionListener(new ActionListener() {
@@ -117,43 +118,48 @@ public class LynkFilterTablePanel<T extends TableModel> extends JPanel implement
 				panel.add(uiPageNowCountFilter, "cell 4 0");
 			}
 			{
-				JLabel label = new JLabel("计数:");
-				label.setFont(APP_FONT_BLOD);
-				panel.add(label, "cell 6 0");
-			}
-			{
-				uiCount = new LynkTextField("0");
-				uiCount.setHorizontalAlignment(SwingConstants.LEFT);
-				uiCount.setEditable(false);
-				uiCount.setForeground(Color.BLUE);
-				uiCount.setFont(APP_FONT);
-				panel.add(uiCount, "cell 7 0,growx");
-			}
-			{
-				JLabel label = new JLabel("和:");
-				label.setFont(APP_FONT_BLOD);
-				panel.add(label, "cell 8 0");
-			}
-			{
-				uiSum = new LynkTextField("0");
-				uiSum.setHorizontalAlignment(SwingConstants.LEFT);
-				uiSum.setEditable(false);
-				uiSum.setForeground(Color.BLUE);
-				uiSum.setFont(APP_FONT);
-				panel.add(uiSum, "cell 9 0,growx");
-			}
-			{
-				JLabel label = new JLabel("均值:");
-				label.setFont(APP_FONT_BLOD);
-				panel.add(label, "cell 10 0");
-			}
-			{
-				uiAverage = new LynkTextField("0");
-				uiAverage.setHorizontalAlignment(SwingConstants.LEFT);
-				uiAverage.setEditable(false);
-				uiAverage.setForeground(Color.BLUE);
-				uiAverage.setFont(APP_FONT);
-				panel.add(uiAverage, "cell 11 0,growx");
+				uiSumPane = new JPanel();
+				uiSumPane.setLayout(new MigLayout("insets 0", "[][100px:n,grow]20[][100px:n,grow]20[][100px:n,grow]", "[]"));
+				panel.add(uiSumPane, "cell 5 0,alignx right");
+				{
+					JLabel label = new JLabel("计数:");
+					label.setFont(APP_FONT_BLOD);
+					uiSumPane.add(label, "cell 0 0");
+				}
+				{
+					uiCount = new LynkTextField("0");
+					uiCount.setHorizontalAlignment(SwingConstants.LEFT);
+					uiCount.setEditable(false);
+					uiCount.setForeground(Color.BLUE);
+					uiCount.setFont(APP_FONT);
+					uiSumPane.add(uiCount, "cell 1 0,growx");
+				}
+				{
+					JLabel label = new JLabel("和:");
+					label.setFont(APP_FONT_BLOD);
+					uiSumPane.add(label, "cell 2 0");
+				}
+				{
+					uiSum = new LynkTextField("0");
+					uiSum.setHorizontalAlignment(SwingConstants.LEFT);
+					uiSum.setEditable(false);
+					uiSum.setForeground(Color.BLUE);
+					uiSum.setFont(APP_FONT);
+					uiSumPane.add(uiSum, "cell 3 0,growx");
+				}
+				{
+					JLabel label = new JLabel("均值:");
+					label.setFont(APP_FONT_BLOD);
+					uiSumPane.add(label, "cell 4 0");
+				}
+				{
+					uiAverage = new LynkTextField("0");
+					uiAverage.setHorizontalAlignment(SwingConstants.LEFT);
+					uiAverage.setEditable(false);
+					uiAverage.setForeground(Color.BLUE);
+					uiAverage.setFont(APP_FONT);
+					uiSumPane.add(uiAverage, "cell 5 0,growx");
+				}
 			}
 			
 		}
@@ -268,5 +274,9 @@ public class LynkFilterTablePanel<T extends TableModel> extends JPanel implement
 	
 	protected void uiClearFilterActionPerformed(ActionEvent evt) {
 		uiTable.clearFilter();
+	}
+	
+	public void setSumPaneVisible(boolean visible) {
+		uiSumPane.setVisible(visible);
 	}
 }
