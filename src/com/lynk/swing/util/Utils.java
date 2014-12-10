@@ -4,7 +4,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Utils {
+import com.lynk.swing.common.Constants;
+
+public class Utils implements Constants {
 	private static DateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
 	public static String getNowStr() {
 		return format.format(new Date());
@@ -29,5 +31,40 @@ public class Utils {
 			return m + "分" + s + "秒";
 		}
 		return (double) second / 1000 + "秒";
+	}
+	
+	/**
+	 * 可用状态转换为数据库表示
+	 * @param enableCn
+	 * @return
+	 */
+	public String convertEnableToTiny(String enableCn) {
+		switch (enableCn) {
+		case ENABLE_CN:
+			return ENABLE;
+		case DISABLE_CN:
+			return DISABLE;
+		case ENABLE_AND_DISABLE_CN:
+			return ENABLE_AND_DISABLE;
+		default:
+			return null;
+		}
+	}
+	/**
+	 * 可用状态转换为中文表示
+	 * @param enableEn
+	 * @return
+	 */
+	public String convertEnableToCn(String enableEn) {
+		switch (enableEn) {
+		case ENABLE:
+			return ENABLE_CN;
+		case DISABLE:
+			return DISABLE_CN;
+		case ENABLE_AND_DISABLE:
+			return ENABLE_AND_DISABLE_CN;
+		default:
+			return null;
+		}
 	}
 }

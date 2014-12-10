@@ -12,7 +12,9 @@ public interface Constants {
 	
 	String ENABLE = "0";
 	String DISABLE = "1";
+	String ENABLE_AND_DISABLE = "2";
 	
 	String ENABLE_CN = "可用";
 	String DISABLE_CN = "已禁用";
+	String ENABLE_AND_DISABLE_CN = "全部";
 }
