@@ -17,7 +17,7 @@ public class LynkReportDialog extends LynkDialog {
 	
 	public static void showDialog(Component parent, JasperPrint jasperPrint) {
 		LynkReportDialog dialog = new LynkReportDialog(jasperPrint, true);
-		dialog.setLocationRelativeTo(parent);
+//		dialog.setLocationRelativeTo(parent);
 		dialog.setVisible(true);
 	}
 	
@@ -33,6 +33,7 @@ public class LynkReportDialog extends LynkDialog {
 	private void initComponents(JasperPrint jasperPrint, boolean showSaveButton) {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(LynkReportDialog.class.getResource("/resource/image/icon.png")));
+		setLocation(LynkSwingUtil.getMaxDialogCenterPoint());
 		setSize(LynkSwingUtil.getMaxDialogSize());
 		if(showSaveButton) {
 			add(new JRViewer(jasperPrint));

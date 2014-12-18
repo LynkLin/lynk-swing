@@ -2,6 +2,7 @@ package com.lynk.swing.util;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.io.InputStream;
@@ -68,17 +69,45 @@ public class LynkSwingUtil {
 	}
 	
 	/**
-	 * 获取屏幕最大尺寸
+	 * 获取对话框尺寸, 和getDialogCenterPoint一起使用
+	 * @param widthMargin: 宽度距离边缘*2
+	 * @param heightMargin: 高度距离边缘*2
 	 * @return
 	 */
-	public static Dimension getMaxDialogSize() {
-		int height = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 80;
-		int width = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 100;
+	public static Dimension getDialogSize(int widthMargin, int heightMargin) {
+		int width = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() - widthMargin;
+		int height = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() - heightMargin;
 		return new Dimension(width, height);
 	}
 	
 	/**
-	 * 生产ToolTip
+	 * 获取对话框剧中位置, 和getDialogSize一起使用
+	 * @param widthMargin: 宽度距离边缘*2
+	 * @param heightMargin: 高度距离边缘*2
+	 * @return
+	 */
+	public static Point getDialogCenterPoint(int widthMargin, int heightMargin) {
+		return new Point(widthMargin / 2, heightMargin / 2);
+	}
+	
+	/**
+	 * 获取对话框最大尺寸, 和getMaxDialogCenterPoint一起使用
+	 * @return
+	 */
+	public static Dimension getMaxDialogSize() {
+		return getDialogSize(100, 80);
+	}
+	
+	/**
+	 * 获取对话框最大尺寸时居中的location, 和getMaxDialogSize一起使用
+	 * @return
+	 */
+	public static Point getMaxDialogCenterPoint() {
+		return getDialogCenterPoint(100, 80);
+	}
+	
+	/**
+	 * 生成ToolTip
 	 * @param name
 	 * @param values
 	 * @return
@@ -101,7 +130,7 @@ public class LynkSwingUtil {
 	}
 	
 	/**
-	 * 生产ToolTip
+	 * 生成ToolTip
 	 * @param names
 	 * @param values
 	 * @return
@@ -123,7 +152,7 @@ public class LynkSwingUtil {
 	}
 	
 	/**
-	 * 生产ToolTip, 第一行加粗显示, 显示表格线
+	 * 生成ToolTip, 第一行加粗显示, 显示表格线
 	 * @param names
 	 * @param values
 	 * @return
