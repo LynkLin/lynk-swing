@@ -72,18 +72,24 @@ public class LynkTable extends JXTable implements Constants {
 	private MenuRestoreAction menuRestoreAction;
 	
 	private boolean initHighLighter = true;
+	private int highLighterRowNum = 1;
 	
 	public JPopupMenu getUiPopMenu() {
 		return uiPopMenu;
 	}
 
 	public LynkTable(TableModel dm) {
-		this(dm, true);
+		this(dm, true, 1);
 	}
 	
 	public LynkTable(TableModel dm, boolean initHighLighter) {
+		this(dm, initHighLighter, 1);
+	}
+	
+	public LynkTable(TableModel dm, boolean initHighLighter, int highLighterRowNum) {
 		super(dm);
 		this.initHighLighter = initHighLighter;
+		this.highLighterRowNum = highLighterRowNum;
 		init();
 	}
 	
@@ -507,7 +513,7 @@ public class LynkTable extends JXTable implements Constants {
 		setColumnControlVisible(true);
 		setFont(APP_FONT);
 		if(initHighLighter) {
-			setHighlighters(HighlighterFactory.createAlternateStriping(new Color(255,251,191), new Color(191,255,222)));
+			setHighlighters(HighlighterFactory.createAlternateStriping(new Color(255,251,191), new Color(191,255,222), highLighterRowNum));
 		}
 	}
 
