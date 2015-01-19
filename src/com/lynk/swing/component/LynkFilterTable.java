@@ -28,11 +28,15 @@ public class LynkFilterTable extends LynkTable {
 	private FilterPopup filterPopup;
 	
 	public LynkFilterTable(TableModel dm) {
-		this(dm, true);
+		this(dm, true, 1);
 	}
 	
 	public LynkFilterTable(TableModel dm, boolean initHighLighter) {
-		super(dm, initHighLighter);
+		this(dm, initHighLighter, 1);
+	}
+	
+	public LynkFilterTable(TableModel dm, boolean initHighLighter, int highLighterRowNum) {
+		super(dm, initHighLighter, highLighterRowNum);
 		init();
 		dm.addTableModelListener(new TableModelListener() {
 			
