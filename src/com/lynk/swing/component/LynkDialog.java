@@ -19,6 +19,8 @@ public class LynkDialog extends JDialog implements Constants {
 	private static final long serialVersionUID = 1L;
 	
 	private WaitingPanel waitPanel;
+	
+	private int callWaitPanelThread = 0;
 
 	public LynkDialog() {
 		this(false);
@@ -44,8 +46,13 @@ public class LynkDialog extends JDialog implements Constants {
 			
 			@Override
 			public void run() {
-				waitPanel.setText(msg == null? "":msg);
-				waitPanel.start();
+				if(callWaitPanelThread == 0) {
+					waitPanel.setText(msg == null? "":msg);
+					waitPanel.start();
+				} else {
+					waitPanel.setText(msg == null? "":msg);
+				}
+				callWaitPanelThread++;
 			}
 		});
 	}
@@ -72,7 +79,10 @@ public class LynkDialog extends JDialog implements Constants {
 			
 			@Override
 			public void run() {
-				waitPanel.stop();
+				if(callWaitPanelThread == 1) {
+					waitPanel.stop();
+				}
+				callWaitPanelThread --;
 			}
 		});
 	}
