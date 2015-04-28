@@ -91,7 +91,7 @@ public class LynkPagerFilterTablePanel<T extends TableModel> extends JPanel impl
 			JPanel panel = new JPanel();
 			panel.setBackground(SystemColor.controlHighlight);
 			add(panel, BorderLayout.SOUTH);
-			panel.setLayout(new MigLayout("", "[]10[][]20[]5[]20[][][][]20[][]20[][][100px:n][][100px:n,grow]20[][100px:n,grow]20[][100px:n,grow]", "[]"));
+			panel.setLayout(new MigLayout("", "[]10[][]20[]5[50px:n]20[][][][]20[][]20[][][grow][][50px:n,grow]20[][50px:n,grow]20[][50px:n,grow]", "[]"));
 			{
 				JButton uiClearFilter = new JButton("清除筛选");
 				uiClearFilter.addActionListener(new ActionListener() {

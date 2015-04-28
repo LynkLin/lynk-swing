@@ -22,8 +22,6 @@ public class LynkFrame extends JFrame implements Constants {
 	
 	private WaitingPanel waitPanel;
 	
-	private int callWaitPanelThread = 0;
-	
 	public LynkFrame() {
 		this(false);
 	}
@@ -47,13 +45,8 @@ public class LynkFrame extends JFrame implements Constants {
 			
 			@Override
 			public void run() {
-				if(callWaitPanelThread == 0) {
-					waitPanel.setText(msg == null? "":msg);
-					waitPanel.start();
-				} else {
-					waitPanel.setText(msg == null? "":msg);
-				}
-				callWaitPanelThread++;
+				waitPanel.setText(msg == null? "":msg);
+				waitPanel.start();
 			}
 		});
 	}
@@ -80,11 +73,7 @@ public class LynkFrame extends JFrame implements Constants {
 			
 			@Override
 			public void run() {
-				if(callWaitPanelThread == 1) {
-					waitPanel.stop();
-				} else {
-					callWaitPanelThread --;
-				}
+				waitPanel.stop();
 			}
 		});
 	}

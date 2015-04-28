@@ -8,6 +8,11 @@ import com.lynk.swing.common.Constants;
 
 public class Utils implements Constants {
 	private static DateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+	
+	/**
+	 * 现在时间
+	 * @return yyyyMMddHHmmss
+	 */
 	public static String getNowStr() {
 		return format.format(new Date());
 	}
