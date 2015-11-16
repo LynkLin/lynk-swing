@@ -52,6 +52,7 @@ public class LynkFilterTable extends LynkTable {
 	}
 	
 	private void init() {
+		setRowAlignCenter();
 		filterPopup = new FilterPopup(true, this);
 		FilterHeaderRenderer renderer = new FilterHeaderRenderer(filterPopup.getFilter());
 		for(TableColumn column : Collections.list(getColumnModel().getColumns())) {

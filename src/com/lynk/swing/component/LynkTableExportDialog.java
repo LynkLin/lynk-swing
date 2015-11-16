@@ -279,6 +279,9 @@ public class LynkTableExportDialog extends LynkDialog implements Constants {
 						cell = row.createCell(columnIndex);
 						cell.setCellStyle(contentStyle);
 						Object value = model.getValueAt(sorter.convertRowIndexToModel(rowIndex), uiRightColumnModel.get(columnIndex).getModelIndex());
+						if (value == null) {
+							value = "";
+						}
 						if(value instanceof Color) {
 							cell.setCellType(XSSFCell.CELL_TYPE_STRING);
 							cell.setCellValue(((Color) value).getRGB());
