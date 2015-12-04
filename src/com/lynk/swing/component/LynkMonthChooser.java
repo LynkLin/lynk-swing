@@ -54,6 +54,18 @@ public class LynkMonthChooser extends JPanel implements Constants {
 		}
 	}
 	
+	public void setMonth(String month) {
+		if (month != null && month.length() == 7) {
+			try {
+				int year = Integer.parseInt(month.substring(0, 4));
+				uiYear.setValue(year);
+				uiMonth.setSelectedItem(month.substring(5, 7));
+			} catch (Exception e) {
+				
+			}
+		}
+	}
+	
 	public String getMonth() {
 		return uiYear.getValue().toString() + "-" + uiMonth.getSelectedItem().toString();
 	}
